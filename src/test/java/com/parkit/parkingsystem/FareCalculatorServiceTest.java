@@ -10,6 +10,7 @@ import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
+import com.parkit.parkingsystem.util.DateHelperUtil;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,8 +43,8 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        Duration durationTypeLengthOfTimeDuringWhenCarWasParked = FareCalculatorService.findLengthOfTimeBetweenTwoLocalDateTimes(inTime, outTime);
-        double doubleTypehoursOfParkedTime = FareCalculatorService.transformDurationIntoDouble(durationTypeLengthOfTimeDuringWhenCarWasParked);
+        Duration durationTypeLengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inTime, outTime);
+        double doubleTypehoursOfParkedTime = DateHelperUtil.transformDurationIntoDouble(durationTypeLengthOfTimeDuringWhenCarWasParked);
         double expectedCarFarePerHour = ticket.getPrice()/doubleTypehoursOfParkedTime;
         assertEquals(expectedCarFarePerHour, Fare.CAR_RATE_PER_HOUR);
         assertEquals(2.25, ticket.getPrice());
@@ -59,8 +60,8 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        Duration durationTypeLengthOfTimeDuringWhenCarWasParked = FareCalculatorService.findLengthOfTimeBetweenTwoLocalDateTimes(inTime, outTime);
-        double doubleTypehoursOfParkedTime = FareCalculatorService.transformDurationIntoDouble(durationTypeLengthOfTimeDuringWhenCarWasParked);
+        Duration durationTypeLengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inTime, outTime);
+        double doubleTypehoursOfParkedTime = DateHelperUtil.transformDurationIntoDouble(durationTypeLengthOfTimeDuringWhenCarWasParked);
         double expectedBikeFarePerHour = ticket.getPrice()/doubleTypehoursOfParkedTime;
         assertEquals(expectedBikeFarePerHour, Fare.BIKE_RATE_PER_HOUR);
         assertEquals(1.5, ticket.getPrice());
@@ -71,7 +72,7 @@ public class FareCalculatorServiceTest {
         LocalDateTime inTime = LocalDateTime.now();
         LocalDateTime outTime =  LocalDateTime.now().plusMinutes(30);
         Duration durationExpected = Duration.between(inTime, outTime);
-        Duration durationTypeLengthOfTimeDuringWhenCarWasParked = FareCalculatorService.findLengthOfTimeBetweenTwoLocalDateTimes(inTime, outTime);
+        Duration durationTypeLengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inTime, outTime);
         assertEquals(durationExpected, durationTypeLengthOfTimeDuringWhenCarWasParked);
     }
 
@@ -79,8 +80,8 @@ public class FareCalculatorServiceTest {
     public void transformDurationIntoDoubleTEST(){
         LocalDateTime inTime = LocalDateTime.now();
         LocalDateTime outTime =  LocalDateTime.now().plusMinutes(30);
-        Duration durationTypeLengthOfTimeDuringWhenCarWasParked = FareCalculatorService.findLengthOfTimeBetweenTwoLocalDateTimes(inTime, outTime);
-        double doubleTypehoursOfParkedTime = FareCalculatorService.transformDurationIntoDouble(durationTypeLengthOfTimeDuringWhenCarWasParked);
+        Duration durationTypeLengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inTime, outTime);
+        double doubleTypehoursOfParkedTime = DateHelperUtil.transformDurationIntoDouble(durationTypeLengthOfTimeDuringWhenCarWasParked);
         assertEquals(0.5, doubleTypehoursOfParkedTime);
     }
 

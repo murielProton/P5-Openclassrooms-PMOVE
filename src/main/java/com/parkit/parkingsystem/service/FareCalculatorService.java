@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
+import com.parkit.parkingsystem.util.DateHelperUtil;
 
 public class FareCalculatorService {
     
@@ -18,8 +19,8 @@ public class FareCalculatorService {
         LocalDateTime outHour = ticket.getOutTime();
         System.out.println("outHour -> "+outHour);
 
-        Duration lengthOfTimeDuringWhenCarWasParked = findLengthOfTimeBetweenTwoLocalDateTimes(inHour, outHour);
-        double hoursOfParkedTime = transformDurationIntoDouble(lengthOfTimeDuringWhenCarWasParked);
+        Duration lengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inHour, outHour);
+        double hoursOfParkedTime = DateHelperUtil.transformDurationIntoDouble(lengthOfTimeDuringWhenCarWasParked);
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
                 ticket.setPrice(hoursOfParkedTime * Fare.CAR_RATE_PER_HOUR);
@@ -36,16 +37,5 @@ public class FareCalculatorService {
             default: throw new IllegalArgumentException("Unkown Parking Type");
         }
     }
-    public static Duration findLengthOfTimeBetweenTwoLocalDateTimes(LocalDateTime in, LocalDateTime out){
-        Duration lengthOfTimeDuringWhenCarWasParked = Duration.between(in, out);
-        System.out.println("lengthOfTimeDuringWhenCarWasParked -> "+lengthOfTimeDuringWhenCarWasParked);
-        return lengthOfTimeDuringWhenCarWasParked;
-    } 
-    public static double transformDurationIntoDouble(Duration newDuration){
-        
-        double durationTypeConvertedToDouble = (double)newDuration.toMinutes()/60;
-        System.out.println("durée du parkcing en type double "+durationTypeConvertedToDouble);
-        
-        return durationTypeConvertedToDouble;
-    }
+
 }
