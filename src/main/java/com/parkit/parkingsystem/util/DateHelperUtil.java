@@ -1,8 +1,10 @@
 package com.parkit.parkingsystem.util;
 
-import java.time.Duration;
+import java.util.Date;
 import java.time.LocalDateTime;
 import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.Duration;
 
 public class DateHelperUtil {
     public static Duration findLengthOfTimeBetweenTwoLocalDateTimes(LocalDateTime in, LocalDateTime out){
@@ -24,6 +26,11 @@ public class DateHelperUtil {
     
     public static LocalDateTime convertTimestampsToLocalDateTime(Timestamp aTimestamp){
         LocalDateTime aLocalDateTime = aTimestamp.toLocalDateTime();
+        return aLocalDateTime;
+    }
+
+    public static LocalDateTime convertDateToLocalDateTime(Date aDate){
+        LocalDateTime aLocalDateTime = LocalDateTime.ofInstant(aDate.toInstant(), ZoneId.systemDefault());
         return aLocalDateTime;
     }
 }
