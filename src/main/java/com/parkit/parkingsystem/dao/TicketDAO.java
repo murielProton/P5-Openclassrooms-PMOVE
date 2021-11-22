@@ -5,6 +5,8 @@ import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
+import com.parkit.parkingsystem.util.DateHelperUtil;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,7 +32,7 @@ public class TicketDAO {
             querrySaveTicket.setInt(1,ticket.getParkingSpot().getId());
             querrySaveTicket.setString(2, ticket.getVehicleRegNumber());
             querrySaveTicket.setDouble(3, ticket.getPrice());
-            querrySaveTicket.setTimestamp(4, convertLocalDateTimeToTimestamp(ticket.getInTime()));
+            querrySaveTicket.setTimestamp(4, DateHelperUtil.convertLocalDateTimeToTimestamp(ticket.getInTime()));
             querrySaveTicket.setTimestamp(5, null);
             return querrySaveTicket.execute();
         }catch (Exception ex){
@@ -57,8 +59,8 @@ public class TicketDAO {
                 ticket.setId(ticketFromDatabase.getInt(2));
                 ticket.setVehicleRegNumber(vehicleRegNumber);
                 ticket.setPrice(ticketFromDatabase.getDouble(3));
-                ticket.setInTime(convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(4)));
-                ticket.setOutTime(convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(5)));
+                ticket.setInTime(DateHelperUtil.convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(4)));
+                ticket.setOutTime(DateHelperUtil.convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(5)));
             }
             dataBaseConfig.closeResultSet(ticketFromDatabase);
             dataBaseConfig.closePreparedStatement(querryGetTicket);
@@ -76,7 +78,7 @@ public class TicketDAO {
             updateTicketConnexion = dataBaseConfig.getConnection();
             PreparedStatement querryUpdateTicket = updateTicketConnexion.prepareStatement(DBConstants.UPDATE_TICKET);
             querryUpdateTicket.setDouble(1, ticket.getPrice());
-            querryUpdateTicket.setTimestamp(2, convertLocalDateTimeToTimestamp(ticket.getOutTime()));
+            querryUpdateTicket.setTimestamp(2, DateHelperUtil.convertLocalDateTimeToTimestamp(ticket.getOutTime()));
             querryUpdateTicket.setInt(3,ticket.getId());
             querryUpdateTicket.execute();
             return true;
@@ -88,14 +90,6 @@ public class TicketDAO {
         return false;
     }
 
-    public Timestamp convertLocalDateTimeToTimestamp(LocalDateTime aDateAndTime){
-        Timestamp aTimeStamp = Timestamp.valueOf(aDateAndTime);
-        return aTimeStamp;
-    }
-    
-    public LocalDateTime convertTimestampsToLocalDateTime(Timestamp aTimestamp){
-        LocalDateTime aLocalDateTime = aTimestamp.toLocalDateTime();
-        return aLocalDateTime;
-    }
+
 
 }
