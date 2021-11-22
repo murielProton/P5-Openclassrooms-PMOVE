@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class TicketDAO {
 
@@ -20,70 +21,81 @@ public class TicketDAO {
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
     public boolean saveTicket(Ticket ticket){
-        Connection con = null;
+        Connection saveTicketConnection = null;
         try {
-            con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET);
+            saveTicketConnection = dataBaseConfig.getConnection();
+            PreparedStatement querrySaveTicket = saveTicketConnection.prepareStatement(DBConstants.SAVE_TICKET);
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-            //ps.setInt(1,ticket.getId());
-            ps.setInt(1,ticket.getParkingSpot().getId());
-            ps.setString(2, ticket.getVehicleRegNumber());
-            ps.setDouble(3, ticket.getPrice());
-            ps.setTimestamp(4, new Timestamp(ticket.getInTime().getTime()));
-            ps.setTimestamp(5, (ticket.getOutTime() == null)?null: (new Timestamp(ticket.getOutTime().getTime())) );
-            return ps.execute();
+            //querrySaveTicket.setInt(1,ticket.getId());
+            querrySaveTicket.setInt(1,ticket.getParkingSpot().getId());
+            querrySaveTicket.setString(2, ticket.getVehicleRegNumber());
+            querrySaveTicket.setDouble(3, ticket.getPrice());
+            querrySaveTicket.setTimestamp(4, convertLocalDateTimeToTimestamp(ticket.getInTime()));
+            querrySaveTicket.setTimestamp(5, null);
+            return querrySaveTicket.execute();
         }catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
         }finally {
-            dataBaseConfig.closeConnection(con);
+            dataBaseConfig.closeConnection(saveTicketConnection);
             return false;
         }
     }
 
     public Ticket getTicket(String vehicleRegNumber) {
-        Connection con = null;
+        Connection getTicketConnection = null;
         Ticket ticket = null;
         try {
-            con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET);
+            getTicketConnection = dataBaseConfig.getConnection();
+            PreparedStatement querryGetTicket = getTicketConnection.prepareStatement(DBConstants.GET_TICKET);
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-            ps.setString(1,vehicleRegNumber);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()){
+            querryGetTicket.setString(1,vehicleRegNumber);
+            ResultSet ticketFromDatabase = querryGetTicket.executeQuery();
+            if(ticketFromDatabase.next()){
                 ticket = new Ticket();
-                ParkingSpot parkingSpot = new ParkingSpot(rs.getInt(1), ParkingType.valueOf(rs.getString(6)),false);
+                ParkingSpot parkingSpot = new ParkingSpot(ticketFromDatabase.getInt(1), ParkingType.valueOf(ticketFromDatabase.getString(6)),false);
                 ticket.setParkingSpot(parkingSpot);
-                ticket.setId(rs.getInt(2));
+                ticket.setId(ticketFromDatabase.getInt(2));
                 ticket.setVehicleRegNumber(vehicleRegNumber);
-                ticket.setPrice(rs.getDouble(3));
-                ticket.setInTime(rs.getTimestamp(4));
-                ticket.setOutTime(rs.getTimestamp(5));
+                ticket.setPrice(ticketFromDatabase.getDouble(3));
+                ticket.setInTime(convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(4)));
+                ticket.setOutTime(convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(5)));
             }
-            dataBaseConfig.closeResultSet(rs);
-            dataBaseConfig.closePreparedStatement(ps);
+            dataBaseConfig.closeResultSet(ticketFromDatabase);
+            dataBaseConfig.closePreparedStatement(querryGetTicket);
         }catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
         }finally {
-            dataBaseConfig.closeConnection(con);
+            dataBaseConfig.closeConnection(getTicketConnection);
             return ticket;
         }
     }
 
     public boolean updateTicket(Ticket ticket) {
-        Connection con = null;
+        Connection updateTicketConnexion = null;
         try {
-            con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
-            ps.setDouble(1, ticket.getPrice());
-            ps.setTimestamp(2, new Timestamp(ticket.getOutTime().getTime()));
-            ps.setInt(3,ticket.getId());
-            ps.execute();
+            updateTicketConnexion = dataBaseConfig.getConnection();
+            PreparedStatement querryUpdateTicket = updateTicketConnexion.prepareStatement(DBConstants.UPDATE_TICKET);
+            querryUpdateTicket.setDouble(1, ticket.getPrice());
+            querryUpdateTicket.setTimestamp(2, convertLocalDateTimeToTimestamp(ticket.getOutTime()));
+            querryUpdateTicket.setInt(3,ticket.getId());
+            querryUpdateTicket.execute();
             return true;
         }catch (Exception ex){
             logger.error("Error saving ticket info",ex);
         }finally {
-            dataBaseConfig.closeConnection(con);
+            dataBaseConfig.closeConnection(updateTicketConnexion);
         }
         return false;
     }
+
+    public Timestamp convertLocalDateTimeToTimestamp(LocalDateTime aDateAndTime){
+        Timestamp aTimeStamp = Timestamp.valueOf(aDateAndTime);
+        return aTimeStamp;
+    }
+    
+    public LocalDateTime convertTimestampsToLocalDateTime(Timestamp aTimestamp){
+        LocalDateTime aLocalDateTime = aTimestamp.toLocalDateTime();
+        return aLocalDateTime;
+    }
+
 }
