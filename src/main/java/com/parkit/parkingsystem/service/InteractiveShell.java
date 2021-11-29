@@ -10,36 +10,46 @@ public class InteractiveShell {
 
     private static final Logger logger = LogManager.getLogger("InteractiveShell");
 
+    private InputReaderUtil inputReaderUtil = new InputReaderUtil();
+    private ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAO();
+    private TicketDAO ticketDAO = new TicketDAO();
+    public ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+
     public static void loadInterface(){
         logger.info("App initialized!!!");
         System.out.println("Welcome to Parking System!");
-
+        InteractiveShell myShell= new InteractiveShell();
+        myShell.run();       
+    }
+    public void run (){
         boolean continueApp = true;
-        InputReaderUtil inputReaderUtil = new InputReaderUtil();
-        ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAO();
-        TicketDAO ticketDAO = new TicketDAO();
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-
         while(continueApp){
             loadMenu();
-            int option = inputReaderUtil.readSelection();
-            switch(option){
-                case 1: {
-                    parkingService.processIncomingVehicle();
-                    break;
-                }
-                case 2: {
-                    parkingService.processExitingVehicle();
-                    break;
-                }
-                case 3: {
-                    System.out.println("Exiting from the system!");
-                    continueApp = false;
-                    break;
-                }
-                default: System.out.println("Unsupported option. Please enter a number corresponding to the provided menu");
-            }
+            continueApp = processOption(inputReaderUtil.readSelection());
         }
+    }
+
+    /**
+     * Excute la bonne méthode.
+     * Retourne si l'application doit contiuner.
+     */
+    public boolean processOption(int option){
+        switch(option){
+            case 1: {
+                parkingService.processIncomingVehicle();
+                break;
+            }
+            case 2: {
+                parkingService.processExitingVehicle();
+                break;
+            }
+            case 3: {
+                System.out.println("Exiting from the system!");
+                return false;
+            }
+            default: System.out.println("Unsupported option. Please enter a number corresponding to the provided menu");
+        }
+        return true;
     }
 
     private static void loadMenu(){
