@@ -13,8 +13,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+
 
 public class TicketDAO {
 
@@ -39,8 +38,9 @@ public class TicketDAO {
             logger.error("Error fetching next available slot",ex);
         }finally {
             dataBaseConfig.closeConnection(saveTicketConnection);
-            return false;
+        
         }
+        return false;
     }
 
     public Ticket getTicket(String vehicleRegNumber) {
@@ -68,8 +68,9 @@ public class TicketDAO {
             logger.error("Error fetching next available slot",ex);
         }finally {
             dataBaseConfig.closeConnection(getTicketConnection);
-            return ticket;
+           
         }
+        return ticket;
     }
 
     public boolean updateTicket(Ticket ticket) {
