@@ -15,12 +15,18 @@ public class InteractiveShell {
     private TicketDAO ticketDAO = new TicketDAO();
     public ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 
+    /**
+     * calls on next methode run
+     */
     public static void loadInterface(){
         logger.info("App initialized!!!");
         System.out.println("Welcome to Parking System!");
         InteractiveShell myShell= new InteractiveShell();
         myShell.run();       
     }
+    /**
+     * calls on next methode processOption(gets info form terminal)
+     */
     public void run (){
         boolean continueApp = true;
         while(continueApp){
@@ -30,8 +36,8 @@ public class InteractiveShell {
     }
 
     /**
-     * Excute la bonne méthode.
-     * Retourne si l'application doit contiuner.
+     * Excute the right methode or CASE
+     * Returns True if App must continue
      */
     public boolean processOption(int option){
         switch(option){

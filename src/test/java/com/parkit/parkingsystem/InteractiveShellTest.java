@@ -15,10 +15,11 @@ public class InteractiveShellTest {
         ParkingService parkingService = Mockito.mock(ParkingService.class);
         InteractiveShell mySheel = new InteractiveShell();
         mySheel.parkingService = parkingService;
-        // Je vérifie que j'ai bien true en résultat de méthode
+        // If I press 1 doese the methode returns True
         assertTrue(mySheel.processOption(1));
-        // J'utilise Mockito pour lui faire vérifier les interaction avec le Mock(fausse instance) sur la méthode que je veux.
+        // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is instanciated at least once
         Mockito.verify(parkingService, Mockito.times(1)).processIncomingVehicle();
+        // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is NOT instanciated
         Mockito.verify(parkingService, Mockito.times(0)).processExitingVehicle();
     }
     @Test
@@ -26,23 +27,40 @@ public class InteractiveShellTest {
         ParkingService parkingService = Mockito.mock(ParkingService.class);
         InteractiveShell mySheel = new InteractiveShell();
         mySheel.parkingService = parkingService;
-        // Je vérifie que j'ai bien true en résultat de méthode
+        // If I press 2 doese the methode returns True
         assertTrue(mySheel.processOption(2));
-        // J'utilise Mockito pour lui faire vérifier les interaction avec le Mock(fausse instance) sur la méthode que je veux.
+        // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is NOT instanciated
         Mockito.verify(parkingService, Mockito.times(0)).processIncomingVehicle();
+        // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is instanciated at least once
         Mockito.verify(parkingService, Mockito.times(1)).processExitingVehicle();
     }
 
     @Test
-    public void chooseTypeOfExitingVehicleWhenFail(){
+    public void chooseTypeOfExitingFromSystem(){
         ParkingService parkingService = Mockito.mock(ParkingService.class);
         InteractiveShell mySheel = new InteractiveShell();
         mySheel.parkingService = parkingService;
-        Mockito.doThrow(new RuntimeException("Oups")).when(parkingService).processExitingVehicle(Mockito.eq);
-        // Je vérifie que j'ai bien true en résultat de méthode
-        assertTrue(mySheel.processOption(2));
-        // J'utilise Mockito pour lui faire vérifier les interaction avec le Mock(fausse instance) sur la méthode que je veux.
+        // If I press 3 doese the methode returns False
+        assertFalse(mySheel.processOption(3));
+        // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is NOT instanciated
         Mockito.verify(parkingService, Mockito.times(0)).processIncomingVehicle();
-        Mockito.verify(parkingService, Mockito.times(1)).processExitingVehicle();
+        // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is NOT instanciated
+        Mockito.verify(parkingService, Mockito.times(0)).processExitingVehicle();
     }
+
+    @Test
+    public void processUnvalidOptions(){
+        ParkingService parkingService = Mockito.mock(ParkingService.class);
+        InteractiveShell mySheel = new InteractiveShell();
+        mySheel.parkingService = parkingService;
+        // If I press 4 doese the methode returns Default
+        assertTrue(mySheel.processOption(4));
+        // verify if an ecception is thrown
+        Mockito.doThrow(new RuntimeException("Oups")).when(parkingService).processExitingVehicle();
+        // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is NOT instanciated
+        Mockito.verify(parkingService, Mockito.times(0)).processIncomingVehicle();
+        // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is NOT instanciated
+        Mockito.verify(parkingService, Mockito.times(0)).processExitingVehicle();
+    }
+
 }
