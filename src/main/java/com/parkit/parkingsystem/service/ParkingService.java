@@ -64,7 +64,7 @@ public class ParkingService {
         int parkingNumber=0;
         ParkingSpot parkingSpot = null;
         try{
-            ParkingType parkingType = getVehichleType();
+            ParkingType parkingType = runGetVehichleType();
             parkingNumber = parkingSpotDAO.getNextAvailableSlot(parkingType);
             if(parkingNumber > 0){
                 parkingSpot = new ParkingSpot(parkingNumber,parkingType, true);
@@ -78,12 +78,23 @@ public class ParkingService {
         }
         return parkingSpot;
     }
-
-    private ParkingType getVehichleType(){
+    private static void loadMenuGetVehiculeType(){
         System.out.println("Please select vehicle type from menu");
         System.out.println("1 CAR");
         System.out.println("2 BIKE");
-        int input = inputReaderUtil.readSelection();
+    }
+    /**
+     * calls on next methode getVehichleType(gets info form terminal)
+     */
+    public ParkingType runGetVehichleType (){
+        ParkingType type = null;
+        while(type == null){
+            loadMenuGetVehiculeType();
+            type = getVehichleType(inputReaderUtil.readSelection());
+        }
+        return type;
+    }
+    public ParkingType getVehichleType(int input){
         switch(input){
             case 1: {
                 return ParkingType.CAR;
@@ -93,9 +104,9 @@ public class ParkingService {
             }
             default: {
                 System.out.println("Incorrect input provided");
-                throw new IllegalArgumentException("Entered input is invalid");
             }
         }
+        return null;
     }
 
     public void processExitingVehicle() {

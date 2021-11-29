@@ -13,10 +13,10 @@ public class InteractiveShellTest {
     @Test
     public void chooseTypeIncomingVehicle(){
         ParkingService parkingService = Mockito.mock(ParkingService.class);
-        InteractiveShell mySheel = new InteractiveShell();
-        mySheel.parkingService = parkingService;
+        InteractiveShell myShell = new InteractiveShell();
+        myShell.parkingService = parkingService;
         // If I press 1 doese the methode returns True
-        assertTrue(mySheel.processOption(1));
+        assertTrue(myShell.processOption(1));
         // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is instanciated at least once
         Mockito.verify(parkingService, Mockito.times(1)).processIncomingVehicle();
         // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is NOT instanciated
@@ -25,10 +25,10 @@ public class InteractiveShellTest {
     @Test
     public void chooseTypeOfExitingVehicle(){
         ParkingService parkingService = Mockito.mock(ParkingService.class);
-        InteractiveShell mySheel = new InteractiveShell();
-        mySheel.parkingService = parkingService;
+        InteractiveShell myShell = new InteractiveShell();
+        myShell.parkingService = parkingService;
         // If I press 2 doese the methode returns True
-        assertTrue(mySheel.processOption(2));
+        assertTrue(myShell.processOption(2));
         // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is NOT instanciated
         Mockito.verify(parkingService, Mockito.times(0)).processIncomingVehicle();
         // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is instanciated at least once
@@ -38,10 +38,10 @@ public class InteractiveShellTest {
     @Test
     public void chooseTypeOfExitingFromSystem(){
         ParkingService parkingService = Mockito.mock(ParkingService.class);
-        InteractiveShell mySheel = new InteractiveShell();
-        mySheel.parkingService = parkingService;
+        InteractiveShell myShell = new InteractiveShell();
+        myShell.parkingService = parkingService;
         // If I press 3 doese the methode returns False
-        assertFalse(mySheel.processOption(3));
+        assertFalse(myShell.processOption(3));
         // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is NOT instanciated
         Mockito.verify(parkingService, Mockito.times(0)).processIncomingVehicle();
         // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is NOT instanciated
@@ -51,10 +51,10 @@ public class InteractiveShellTest {
     @Test
     public void processUnvalidOptions(){
         ParkingService parkingService = Mockito.mock(ParkingService.class);
-        InteractiveShell mySheel = new InteractiveShell();
-        mySheel.parkingService = parkingService;
+        InteractiveShell myShell = new InteractiveShell();
+        myShell.parkingService = parkingService;
         // If I press 4 doese the methode returns Default
-        assertTrue(mySheel.processOption(4));
+        assertTrue(myShell.processOption(4));
         // verify if an ecception is thrown
         Mockito.doThrow(new RuntimeException("Oups")).when(parkingService).processExitingVehicle();
         // Mockito will instanciate a false instance of the methode I chose. Verify that this methode is NOT instanciated
