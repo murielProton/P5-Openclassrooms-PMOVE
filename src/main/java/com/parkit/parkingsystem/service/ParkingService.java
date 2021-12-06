@@ -64,10 +64,14 @@ public class ParkingService {
         int parkingNumber=0;
         ParkingSpot parkingSpot = null;
         try{
+            System.out.println("I am in ParkingService getNextParkingNumberIfAvailable Trying to ...");
             ParkingType parkingType = runGetVehichleType();
+            System.out.println("Get parking type "+parkingType);
             parkingNumber = parkingSpotDAO.getNextAvailableSlot(parkingType);
+            System.out.println("Get parking number "+parkingNumber);
             if(parkingNumber > 0){
                 parkingSpot = new ParkingSpot(parkingNumber,parkingType, true);
+                System.out.println("Get parking spot "+parkingSpot);
             }else{
                 throw new Exception("Error fetching parking number from DB. Parking slots might be full");
             }
@@ -97,9 +101,11 @@ public class ParkingService {
     public ParkingType getVehichleType(int input){
         switch(input){
             case 1: {
+                System.out.println("1CAR");
                 return ParkingType.CAR;
             }
             case 2: {
+                System.out.println("2BIKE");
                 return ParkingType.BIKE;
             }
             default: {
