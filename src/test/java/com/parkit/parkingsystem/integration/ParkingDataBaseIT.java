@@ -1,9 +1,11 @@
 package com.parkit.parkingsystem.integration;
 
+import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
+import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.junit.jupiter.api.AfterAll;
@@ -13,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import junit.framework.Assert;
+
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,6 +52,42 @@ public class ParkingDataBaseIT {
     }
 
     @Test
+    public void test_getNextAvailableSlot(){
+        // accès sans modification
+        Assert.assertEquals(1,  parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
+        Assert.assertEquals(4,  parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE));
+        Assert.assertEquals(1,  parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
+        Assert.assertEquals(4,  parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE));
+    }
+
+    @Test
+    public void test_updateParking_CAR(){
+        // GIVEN / BEFORE
+        Assert.assertEquals(1,  parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
+        Assert.assertEquals(4,  parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE));
+        ParkingSpot spot = new ParkingSpot(1, ParkingType.CAR, false);
+        // WHEN
+        Assert.assertTrue(parkingSpotDAO.updateParking(spot));
+        //THEN
+        Assert.assertEquals(2,  parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
+        Assert.assertEquals(4,  parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE));
+    }
+
+    
+    @Test
+    public void test_updateParking_Bike(){
+        // GIVEN / BEFORE
+        Assert.assertEquals(1,  parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
+        Assert.assertEquals(4,  parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE));
+        ParkingSpot spot = new ParkingSpot(4, ParkingType.BIKE, false);
+        // WHEN
+        Assert.assertTrue(parkingSpotDAO.updateParking(spot));
+        //THEN
+        Assert.assertEquals(1,  parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
+        Assert.assertEquals(5,  parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE));
+    }
+    /*
+    @Test
     public void testParkingACar(){
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle();
@@ -54,13 +95,11 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void testParkingLotExit() throws Exception {
-        when(inputReaderUtil.readSelection()).thenReturn(1);
-        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+    public void testParkingLotExit(){
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processExitingVehicle();
         //TODO: check that the fare generated and out time are populated correctly in the database
     }
-
+*/
 }
