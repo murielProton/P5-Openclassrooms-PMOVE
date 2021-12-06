@@ -9,7 +9,6 @@ import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.DateHelperUtil;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
-import org.apache.commons.lang.ObjectUtils.Null;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
