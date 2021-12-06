@@ -48,6 +48,7 @@ public class ParkingService {
                 ticketDAO.saveTicket(ticket);
                 System.out.println("Generated Ticket and saved in DB");
                 System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
+                System.out.println("The gate opens !");
                 System.out.println("Recorded in-time for vehicle number:"+vehicleRegNumber+" is:"+inTime);
             }
         }catch(Exception e){
@@ -59,19 +60,15 @@ public class ParkingService {
         System.out.println("Please type the vehicle registration number and press enter key");
         return inputReaderUtil.readVehicleRegistrationNumber();
     }
-
+    
     public ParkingSpot getNextParkingNumberIfAvailable(){
         int parkingNumber=0;
         ParkingSpot parkingSpot = null;
         try{
-            System.out.println("I am in ParkingService getNextParkingNumberIfAvailable Trying to ...");
             ParkingType parkingType = runGetVehichleType();
-            System.out.println("Get parking type "+parkingType);
             parkingNumber = parkingSpotDAO.getNextAvailableSlot(parkingType);
-            System.out.println("Get parking number "+parkingNumber);
             if(parkingNumber > 0){
                 parkingSpot = new ParkingSpot(parkingNumber,parkingType, true);
-                System.out.println("Get parking spot "+parkingSpot);
             }else{
                 throw new Exception("Error fetching parking number from DB. Parking slots might be full");
             }
@@ -101,11 +98,9 @@ public class ParkingService {
     public ParkingType getVehichleType(int input){
         switch(input){
             case 1: {
-                System.out.println("1CAR");
                 return ParkingType.CAR;
             }
             case 2: {
-                System.out.println("2BIKE");
                 return ParkingType.BIKE;
             }
             default: {

@@ -21,13 +21,11 @@ public class ParkingSpotDAO {
         int result=-1;
         try {
             con = dataBaseConfig.getConnection();
-            System.out.println("Get connection success ");
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT);
             ps.setString(1, parkingType.toString());
             ResultSet parkingSpotResult = ps.executeQuery();
             if(parkingSpotResult.next()){
                 result = parkingSpotResult.getInt(1);;
-                System.out.println("if result next "+result);
             }
             dataBaseConfig.closeResultSet(parkingSpotResult);
             dataBaseConfig.closePreparedStatement(ps);
