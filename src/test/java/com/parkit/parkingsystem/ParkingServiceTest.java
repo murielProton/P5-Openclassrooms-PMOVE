@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 
@@ -51,11 +52,35 @@ public class ParkingServiceTest {
         ticket.setVehicleRegNumber("ABCDEF");
         when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
         when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
-
         when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         parkingService.processExitingVehicle();
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+    }
+
+    @Test
+    public void processExitingVehicleTest_whenUpdateTicketRuturnFalse() throws Exception{
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+        Ticket ticket = new Ticket();
+        Date today = new Date(System.currentTimeMillis() - (60*60*1000));
+        ticket.setInTime(DateHelperUtil.convertDateToLocalDateTime(today));
+        ticket.setParkingSpot(parkingSpot);
+        ticket.setVehicleRegNumber("ABCDEF");
+        when(ticketDAO.getTicket(any())).thenReturn(ticket);
+        when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
+        parkingService.processExitingVehicle();
+        verify(parkingSpotDAO, Mockito.times(0)).updateParking(any(ParkingSpot.class));
+    }
+    @Test
+    public void processExitingVehicleTest_WhenErrorThrow() throws Exception{
+        RuntimeException myException = new RuntimeException("test");
+        when(ticketDAO.getTicket(any())).thenThrow(myException);
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            parkingService.processExitingVehicle();
+        });
+        
+        assertEquals("Unable to process exiting vehicle", exception.getMessage());
+        assertEquals(myException, exception.getCause());
     }
 
     @Test

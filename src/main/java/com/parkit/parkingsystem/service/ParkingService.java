@@ -66,6 +66,7 @@ public class ParkingService {
         ParkingSpot parkingSpot = null;
         try{
             ParkingType parkingType = runGetVehichleType();
+
             parkingNumber = parkingSpotDAO.getNextAvailableSlot(parkingType);
             if(parkingNumber > 0){
                 parkingSpot = new ParkingSpot(parkingNumber,parkingType, true);
@@ -112,22 +113,28 @@ public class ParkingService {
 
     public void processExitingVehicle() {
         try{
+            System.out.println("question 0 ");
             String vehicleRegNumber = getVehichleRegNumber();
+            System.out.println("question 1 "+vehicleRegNumber);
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
+            System.out.println("question 2 "+ticket);
             LocalDateTime outTime = LocalDateTime.now();
+            System.out.println("question 3 "+outTime);
             ticket.setOutTime(outTime);
             fareCalculatorService.calculateFare(ticket);
             if(ticketDAO.updateTicket(ticket)) {
+                System.out.println("if question 4 "+ticketDAO.updateTicket(ticket));
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
                 parkingSpotDAO.updateParking(parkingSpot);
-                System.out.println("Please pay the parking fare:" + ticket.getPrice());
-                System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is:" + outTime);
+                System.out.println("Please pay the parking fare : " + ticket.getPrice());
+                System.out.println("Recorded out-time for vehicle number : " + ticket.getVehicleRegNumber() + " is : " + outTime);
             }else{
                 System.out.println("Unable to update ticket information. Error occurred");
             }
         }catch(Exception e){
-            logger.error("Unable to process exiting vehicle",e);
+            logger.error("Unable to process exiting vehicle", e);
+            throw new RuntimeException("Unable to process exiting vehicle", e);
         }
     }
 }
