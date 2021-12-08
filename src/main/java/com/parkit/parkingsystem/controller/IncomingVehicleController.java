@@ -3,11 +3,14 @@ package com.parkit.parkingsystem.controller;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
+import com.parkit.parkingsystem.util.RegistrationNumberSecurityUtil;
 
 public class IncomingVehicleController{
     private boolean needStopVehicleType = false;
     private ParkingType currentType = null;
+    private String vehicleRegNumber = null;
     private ParkingService parkingService;
+    RegistrationNumberSecurityUtil instanceOfRegistrationNumberSecurityUtil = new RegistrationNumberSecurityUtil(vehicleRegNumber);
     public IncomingVehicleController(ParkingService parkingService) {
         this.parkingService = parkingService;
     }
@@ -33,6 +36,7 @@ public class IncomingVehicleController{
         switch(vehicleType){
                 case 1: {
                     System.out.println("You are driving a car.");
+                    runRegistrationNumberController(currentType.CAR);
                     //currentType = ParkingType.CAR;
                     // select TYpe + screen registration slate
                     break;
@@ -51,5 +55,19 @@ public class IncomingVehicleController{
             }
             return null;
     }
-    
+    private void runRegistrationNumberController(ParkingType currentType) {
+        if(parkingService.isThereAParkingSpotForType(currentType)){
+            while(needStopVehicleType==false){
+                try {
+                    vehicleRegNumber = RegistrationNumberController.inputRegistrationNumber();
+                    instanceOfRegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }else{
+            System.out.println("We are verry sorry all our parking slots for are currently takent.");
+            System.out.println("Please accept our sincere appologies, while waiting.");
+        }
+    }
 }

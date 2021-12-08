@@ -26,18 +26,7 @@ public class InputReaderUtil {
         String validRegistrationNumber = checkVehicleRegistrationNumber(vehicleRegNumber);
         return validRegistrationNumber;
     }
-    public static String checkVehicleRegistrationNumber(String vehicleRegNumber) throws Exception{
-        try {
-            if(vehicleRegNumber == null || vehicleRegNumber.trim().length()<7 || vehicleRegNumber.trim().length()>14 ) {
-                throw new IllegalArgumentException("Invalid input provided");
-            }
-            return vehicleRegNumber;
-        }catch(Exception e){
-            logger.error("Error while reading user input from Shell", e);
-            System.out.println("Error reading input. Please enter a valid string for vehicle registration number");
-            throw e;
-        }
-    }
+    
     /**
      * Old methods TODO sort old methods
      * ------------------
