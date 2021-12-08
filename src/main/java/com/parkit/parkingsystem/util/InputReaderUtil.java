@@ -38,6 +38,31 @@ public class InputReaderUtil {
             throw e;
         }
     }
+    public static String readNextLine(String whatIsAsked) {
+        try {
+            return scan.nextLine();
+        }catch(Exception e){
+            logger.error("Error while reading next line from the user input in Shell", e);
+            System.out.println("Error reading input. Please enter valid "+whatIsAsked+" for proceeding further");
+            return null;
+        }
+    }
+
+    public static String readNextLine() {
+        try {
+            return scan.nextLine();
+        }catch(Exception e){
+            return null;
+        }
+    }
+
+    public static int readInt() {
+        try {
+            return Integer.parseInt(scan.nextLine());
+        }catch(Exception e){
+            return -1;
+        }
+    }
 
 
 }
