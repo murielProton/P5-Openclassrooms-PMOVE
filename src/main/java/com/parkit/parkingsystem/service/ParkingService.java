@@ -27,45 +27,17 @@ public class ParkingService {
         this.ticketDAO = ticketDAO;
     }
 
-    public void processIncomingVehicle() {
-        try{
-            ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
-            if(parkingSpot !=null && parkingSpot.getId() > 0){
-                String vehicleRegNumber = getVehichleRegNumber();
-                parkingSpot.setAvailable(false);
-                parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
-                
-                LocalDateTime inTime = LocalDateTime.now();
-                Ticket ticket = new Ticket();
-                //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-                //ticket.setId(ticketID);
-                ticket.setParkingSpot(parkingSpot);
-                ticket.setVehicleRegNumber(vehicleRegNumber);
-                ticket.setPrice(0);
-                ticket.setInTime(inTime);
-                ticket.setOutTime(null);
-                ticketDAO.saveTicket(ticket);
-                System.out.println("Generated Ticket and saved in DB");
-                System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
-                System.out.println("The gate opens !");
-                System.out.println("Recorded in-time for vehicle number:"+vehicleRegNumber+" is:"+inTime);
-            }
-        }catch(Exception e){
-            logger.error("Unable to process incoming vehicle",e);
-        }
-    }
+    
 
     private String getVehichleRegNumber() throws Exception {
         System.out.println("Please type the vehicle registration number and press enter key");
         return InputReaderUtil.readVehicleRegistrationNumber();
     }
     
-    public ParkingSpot getNextParkingNumberIfAvailable(){
+    public ParkingSpot getNextParkingNumberIfAvailable(ParkingType parkingType){
         int parkingNumber=0;
         ParkingSpot parkingSpot = null;
         try{
-            ParkingType parkingType = runGetVehichleType();
-
             parkingNumber = parkingSpotDAO.getNextAvailableSlot(parkingType);
             if(parkingNumber > 0){
                 parkingSpot = new ParkingSpot(parkingNumber,parkingType, true);
@@ -147,5 +119,34 @@ public class ParkingService {
         boolean result = ticketDAO.getTicketIfVehiculeAlreadyInside(registrationNumber, parkingType) > 0;
         System.out.println("isThereAlreadyThisVehicleInDB" + registrationNumber+" - "+ parkingType +" result "+result);
         return ticketDAO.getTicketIfVehiculeAlreadyInside(registrationNumber, parkingType) > 0;
+    }
+    public void saveParkingSpot(ParkingSpot parkingSpot){
+        try{
+            parkingSpot.setAvailable(false);
+            parkingSpotDAO.updateParking(parkingSpot);
+        }catch(Exception e){
+            logger.error("Unable to process save Parking Spot",e);
+        }
+    }
+    public void saveIncomingVehicleInDB(ParkingSpot parkingSpot, String vehicleRegNumber) {
+        try{
+            if(parkingSpot !=null && parkingSpot.getId() > 0){
+                //allot this parking space and mark it's availability as false
+                
+                LocalDateTime inTime = LocalDateTime.now();
+                Ticket ticket = new Ticket();
+                //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
+                //ticket.setId(ticketID);
+                ticket.setParkingSpot(parkingSpot);
+                ticket.setVehicleRegNumber(vehicleRegNumber);
+                ticket.setPrice(0);
+                ticket.setInTime(inTime);
+                //TODO : replace null by now LocalDateTime
+                ticket.setOutTime(null);
+                ticketDAO.saveTicket(ticket);
+            }
+        }catch(Exception e){
+            logger.error("Unable to save incoming vehicle",e);
+        }
     }
 }

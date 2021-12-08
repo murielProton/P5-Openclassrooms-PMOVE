@@ -1,6 +1,10 @@
 package com.parkit.parkingsystem.controller;
 
+import java.time.LocalDateTime;
+
 import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.dao.ParkingSpotDAO;
+import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import com.parkit.parkingsystem.util.RegistrationNumberSecurityUtil;
@@ -10,6 +14,7 @@ public class IncomingVehicleController{
     private ParkingType currentType = null;
     private String vehicleRegNumber = null;
     private ParkingService parkingService;
+    private ParkingSpotDAO parkingSpotDAO;
     RegistrationNumberSecurityUtil instanceOfRegistrationNumberSecurityUtil = new RegistrationNumberSecurityUtil(vehicleRegNumber);
     public IncomingVehicleController(ParkingService parkingService) {
         this.parkingService = parkingService;
@@ -64,6 +69,7 @@ public class IncomingVehicleController{
                     if(instanceOfRegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber) &&
                     !parkingService.isThereAlreadyThisVehicleInDB(vehicleRegNumber, currentType)){
                         System.out.println("run save in database.");
+                        runSavingTicket(vehicleRegNumber, currentType);
                     }else{
                         System.out.println("Incorrect vehicule registered number.");
                     }
@@ -75,5 +81,26 @@ public class IncomingVehicleController{
             System.out.println("We are verry sorry all our parking slots for are currently takent.");
             System.out.println("Please accept our sincere appologies, while waiting.");
         }
+    }
+    private void runSavingTicket(String vehicleRegNumber, ParkingType currentType){
+        try{
+            LocalDateTime inTime = LocalDateTime.now();
+            ParkingSpot parkingSpotWhereToGo = parkingService.getNextParkingNumberIfAvailable(currentType);
+            parkingService.saveParkingSpot(parkingSpotWhereToGo);
+            parkingService.saveIncomingVehicleInDB(parkingSpotWhereToGo, vehicleRegNumber);
+            successInSavingTicket(vehicleRegNumber, inTime, parkingSpotWhereToGo);
+            //TODO : REAL PB HERE
+            //AlphaController.loadInterface();
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("Unable to process incoming vehicle");
+        }
+    }
+    private void successInSavingTicket(String vehicleRegNumber, LocalDateTime inTime, ParkingSpot parkingSpot){
+        System.out.println("Generated Ticket and saved in DB.");
+        System.out.println("You've entered this day :"+ inTime);
+        System.out.println("Recorded in-time for vehicle number:"+vehicleRegNumber+".");
+        System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
+        System.out.println("The gate opens !");
     }
 }
