@@ -8,8 +8,7 @@ import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.util.DateHelperUtil;
 
 public class FareCalculatorService {
-    
-    public void calculateFare(Ticket ticket){
+    public Duration getDurationOfTicket(Ticket ticket){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().isBefore(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
@@ -20,6 +19,10 @@ public class FareCalculatorService {
         System.out.println("outHour -> "+outHour);
 
         Duration lengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inHour, outHour);
+        return lengthOfTimeDuringWhenCarWasParked;
+    }
+    public void calculateFare(Ticket ticket){
+        Duration lengthOfTimeDuringWhenCarWasParked = getDurationOfTicket(ticket);
         double hoursOfParkedTime = DateHelperUtil.transformDurationIntoDouble(lengthOfTimeDuringWhenCarWasParked);
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
