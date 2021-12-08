@@ -44,7 +44,7 @@ public class AlphaController {
             case 1: {
                 //TODO Faire la méthode associée.
                 System.out.println("doIncomingVehicle");
-                //doIncomingVehicle();
+                IncomingVehicleController.instance.runSelectVehicleType();
                 break;
             }
             case 2: {
