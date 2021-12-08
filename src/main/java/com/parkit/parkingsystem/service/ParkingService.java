@@ -143,4 +143,9 @@ public class ParkingService {
     public boolean isThereAParkingSpotForType(ParkingType parkingType){
         return parkingSpotDAO.getNumberOfAvailableSlotForType(parkingType) > 0;
     }
+    public boolean isThereAlreadyThisVehicleInDB(String registrationNumber, ParkingType parkingType){
+        boolean result = ticketDAO.getTicketIfVehiculeAlreadyInside(registrationNumber, parkingType) > 0;
+        System.out.println("isThereAlreadyThisVehicleInDB" + registrationNumber+" - "+ parkingType +" result "+result);
+        return ticketDAO.getTicketIfVehiculeAlreadyInside(registrationNumber, parkingType) > 0;
+    }
 }

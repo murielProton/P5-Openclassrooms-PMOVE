@@ -83,9 +83,7 @@ public class ParkingSpotDAO {
             con = dataBaseConfig.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_NUMBER_OF_AVAILABLE_PARKING_SPOT_TYPE);
             //After the Where in quarry replace the xth parametter or ?
-            boolean availability = true;
-            ps.setBoolean(1, availability);
-            ps.setString(2, parkingType.toString());
+            ps.setString(1, parkingType.toString());
             ResultSet parkingSpotResult = ps.executeQuery();
             // get only the first line of the result of the querry
             if(parkingSpotResult.next()){

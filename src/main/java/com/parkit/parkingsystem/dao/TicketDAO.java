@@ -11,8 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 
 
 public class TicketDAO {
@@ -90,7 +92,34 @@ public class TicketDAO {
         }
         return false;
     }
-
+    public int getTicketIfVehiculeAlreadyInside(String vehicleRegNumber, ParkingType parkingType){
+        Connection con = null;
+        int result =0;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_NUMBER_OF_TICKETS_WHERE_VREG_TYPE);
+            //After the Where in quarry replace the xth parametter or ?
+            ps.setString(1, vehicleRegNumber.toString());
+            ps.setString(2, parkingType.toString());
+            ResultSet ticketsFromDatabase = ps.executeQuery();
+            // get only the first line of the result of the querry
+            if(ticketsFromDatabase.next()){
+                System.out.println("getTicketIfVehiculeAlreadyInside - " + ticketsFromDatabase.getString(1));
+                System.out.println("getTicketIfVehiculeAlreadyInside - " + ticketsFromDatabase);
+                result = ticketsFromDatabase.getInt(1); 
+            }
+            //close execution of the querry wich is the 'array' returned by the querry
+            dataBaseConfig.closeResultSet(ticketsFromDatabase);
+            //close the prepared statement or link to db
+            dataBaseConfig.closePreparedStatement(ps);
+        }catch (Exception ex){
+            logger.error("Error fetching number of available slot for "+ parkingType.toString() +" ",ex);
+        }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        System.out.println("getTicketIfVehiculeAlreadyInside" + vehicleRegNumber+" - "+ parkingType +" result "+result);
+        return result;
+    }
 
 
 }

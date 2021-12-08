@@ -43,6 +43,7 @@ public class IncomingVehicleController{
                 }
                 case 2: {
                     System.out.println("You are driving a motorbike.");
+                    runRegistrationNumberController(currentType.BIKE);
                     //currentType = ParkingType.BIKE;
                     // select TYpe + screen registration slate
                     break;
@@ -60,7 +61,12 @@ public class IncomingVehicleController{
             while(needStopVehicleType==false){
                 try {
                     vehicleRegNumber = RegistrationNumberController.inputRegistrationNumber();
-                    instanceOfRegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber);
+                    if(instanceOfRegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber) &&
+                    !parkingService.isThereAlreadyThisVehicleInDB(vehicleRegNumber, currentType)){
+                        System.out.println("run save in database.");
+                    }else{
+                        System.out.println("Incorrect vehicule registered number.");
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
