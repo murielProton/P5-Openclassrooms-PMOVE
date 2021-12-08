@@ -10,7 +10,7 @@ public class InputReaderUtil {
     private static Scanner scan = new Scanner(System.in);
     private static final Logger logger = LogManager.getLogger("InputReaderUtil");
 
-    public int readSelection() {
+    public static int readSelection() {
         try {
             int input = Integer.parseInt(scan.nextLine());
             return input;
@@ -21,7 +21,7 @@ public class InputReaderUtil {
         }
     }
 
-    public String readVehicleRegistrationNumber() throws Exception{
+    public static String readVehicleRegistrationNumber() throws Exception{
         String vehicleRegNumber= scan.nextLine();
         String validRegistrationNumber = checkVehicleRegistrationNumber(vehicleRegNumber);
         return validRegistrationNumber;
@@ -38,7 +38,12 @@ public class InputReaderUtil {
             throw e;
         }
     }
-    public static String readNextLine(String whatIsAsked) {
+    /**
+     * Old methods TODO sort old methods
+     * ------------------
+     * New methods added by Muriel
+    */
+   /* public static String readNextLine(String whatIsAsked) {
         try {
             return scan.nextLine();
         }catch(Exception e){
@@ -46,7 +51,7 @@ public class InputReaderUtil {
             System.out.println("Error reading input. Please enter valid "+whatIsAsked+" for proceeding further");
             return null;
         }
-    }
+    }*/
 
     public static String readNextLine() {
         try {

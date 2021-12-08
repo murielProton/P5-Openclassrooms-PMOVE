@@ -1,5 +1,8 @@
 package com.parkit.parkingsystem.controller;
 
+import com.parkit.parkingsystem.dao.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,6 +11,11 @@ public class AlphaController {
 
     private boolean working = true;
     private static final Logger logger = LogManager.getLogger("AlphaController");
+    private ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAO();
+    private TicketDAO ticketDAO = new TicketDAO();
+    private ParkingService parkingService = new ParkingService(parkingSpotDAO, ticketDAO);
+    private IncomingVehicleController incomingVehicleController = new IncomingVehicleController(parkingService);
+
     /**
      * calls on next methode run
      */
@@ -42,10 +50,10 @@ public class AlphaController {
     public void processSelectAction(int action){
         switch(action){
             case 1: {
-                //TODO Faire la méthode associée.
                 System.out.println("doIncomingVehicle");
-                IncomingVehicleController.instance.runSelectVehicleType();
+                incomingVehicleController.runSelectVehicleType();
                 break;
+
             }
             case 2: {
                 //TODO Faire la méthode associée.

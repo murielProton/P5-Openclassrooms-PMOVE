@@ -55,5 +55,52 @@ public class ParkingSpotDAO {
             dataBaseConfig.closeConnection(con);
         }
     }
+    public int getTotalNumberOfAvailableSlot(){
+        Connection con = null;
+        int result=0;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_NUMBER_OF_AVAILABLE_PARKING_SPOT);
+            ResultSet parkingSpotResult = ps.executeQuery();
+            // get only the first line
+            if(parkingSpotResult.next()){
+                result = parkingSpotResult.getInt(1);
+            }
 
+            dataBaseConfig.closeResultSet(parkingSpotResult);
+            dataBaseConfig.closePreparedStatement(ps);
+        }catch (Exception ex){
+            logger.error("Error fetching number of available slot",ex);
+        }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return result;
+    }
+    public int getNumberOfAvailableSlotForType(ParkingType parkingType){
+        Connection con = null;
+        int result=0;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_NUMBER_OF_AVAILABLE_PARKING_SPOT_TYPE);
+            //After the Where in quarry replace the xth parametter or ?
+            boolean availability = true;
+            ps.setBoolean(1, availability);
+            ps.setString(2, parkingType.toString());
+            ResultSet parkingSpotResult = ps.executeQuery();
+            // get only the first line of the result of the querry
+            if(parkingSpotResult.next()){
+                //get value of the querry - 1 stands for the parameter number after the SELECT
+                result = parkingSpotResult.getInt(1);
+                //close execution of the querry wich is the 'array' returned by the querry
+            }
+            dataBaseConfig.closeResultSet(parkingSpotResult);
+            //close the prepared statement or link to db
+            dataBaseConfig.closePreparedStatement(ps);
+        }catch (Exception ex){
+            logger.error("Error fetching number of available slot for "+ parkingType.toString() +" ",ex);
+        }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return result;
+    }
 }

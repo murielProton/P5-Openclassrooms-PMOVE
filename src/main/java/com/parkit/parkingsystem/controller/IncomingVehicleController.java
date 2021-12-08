@@ -1,16 +1,25 @@
 package com.parkit.parkingsystem.controller;
 
 import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
 public class IncomingVehicleController{
     private boolean needStopVehicleType = false;
     private ParkingType currentType = null;
-    public static IncomingVehicleController instance = new IncomingVehicleController();
+    private ParkingService parkingService;
+    public IncomingVehicleController(ParkingService parkingService) {
+        this.parkingService = parkingService;
+    }
     public void runSelectVehicleType(){
-        while(needStopVehicleType==false){
-
-            selectVehicleType();
+        //TODO Faire la méthode associée.
+        if(parkingService.isThereAParkingSpotForAnyType()){
+            while(needStopVehicleType==false){
+                selectVehicleType();
+            }
+        }else{
+            System.out.println("We are verry sorry all our parking slots are currently takent.");
+            System.out.println("Please accept our sincere appologies, while waiting.");
         }
     }
     public void selectVehicleType(){
