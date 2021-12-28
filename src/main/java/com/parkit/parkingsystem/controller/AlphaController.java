@@ -15,6 +15,8 @@ public class AlphaController {
     private TicketDAO ticketDAO = new TicketDAO();
     private ParkingService parkingService = new ParkingService(parkingSpotDAO, ticketDAO);
     private IncomingVehicleController incomingVehicleController = new IncomingVehicleController(parkingService);
+    
+    
 
     /**
      * calls on next methode run
@@ -50,7 +52,6 @@ public class AlphaController {
     public void processSelectAction(int action){
         switch(action){
             case 1: {
-                System.out.println("doIncomingVehicle");
                 incomingVehicleController.runSelectVehicleType();
                 break;
 

@@ -78,7 +78,7 @@ public class IncomingVehicleController{
                 }
             }
         }else{
-            System.out.println("We are verry sorry all our parking slots for are currently takent.");
+            System.out.println("We are verry sorry all our parking slots for are currently taken.");
             System.out.println("Please accept our sincere appologies, while waiting.");
         }
     }
@@ -90,7 +90,7 @@ public class IncomingVehicleController{
             parkingService.saveIncomingVehicleInDB(parkingSpotWhereToGo, vehicleRegNumber);
             successInSavingTicket(vehicleRegNumber, inTime, parkingSpotWhereToGo);
             //TODO : REAL PB HERE
-            //AlphaController.loadInterface();
+            AlphaController.loadInterface();
         }catch(Exception e){
             e.printStackTrace();
             System.out.println("Unable to process incoming vehicle");
