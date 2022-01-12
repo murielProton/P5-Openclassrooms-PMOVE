@@ -154,4 +154,9 @@ public class ParkingService {
 		TicketDAO.updateOutTimeOfCurrentTicket(ticket);
 		
 	}
+	public static void updatePriceOfCurrentTicket(Ticket ticket, Double price) {
+		ticket.setPrice(price);
+		TicketDAO.updatePriceOfCurrentTicket(ticket, price);
+		
+	}
 }

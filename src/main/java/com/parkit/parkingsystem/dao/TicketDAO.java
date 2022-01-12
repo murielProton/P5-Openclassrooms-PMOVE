@@ -162,7 +162,23 @@ public class TicketDAO {
             querryUpdateTicket.execute();
             return true;
         }catch (Exception ex){
-            logger.error("Error saving ticket info",ex);
+            logger.error("Error saving date of ticket.",ex);
+        }finally {
+            dataBaseConfig.closeConnection(updateTicketConnexion);
+        }
+        return false;
+    }
+    public static boolean updatePriceOfCurrentTicket(Ticket ticket, Double price) {
+        Connection updateTicketConnexion = null;
+        try {
+            updateTicketConnexion = dataBaseConfig.getConnection();
+            PreparedStatement querryUpdateTicket = updateTicketConnexion.prepareStatement(DBConstants.UPDATE_PRICE_OF_TICKET);
+            querryUpdateTicket.setDouble(1, price);
+            querryUpdateTicket.setInt(2, ticket.getId());
+            querryUpdateTicket.execute();
+            return true;
+        }catch (Exception ex){
+            logger.error("Error saving price of ticket.",ex);
         }finally {
             dataBaseConfig.closeConnection(updateTicketConnexion);
         }
