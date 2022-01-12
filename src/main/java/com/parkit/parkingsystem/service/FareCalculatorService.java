@@ -10,32 +10,29 @@ import com.parkit.parkingsystem.util.DateHelperUtil;
 public class FareCalculatorService {
     public Duration getDurationOfTicket(Ticket ticket){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().isBefore(ticket.getInTime())) ){
-            throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
+            throw new IllegalArgumentException("Out time provided is incorrect: "+ticket.getOutTime());
         }
 
         LocalDateTime inHour = ticket.getInTime();
-        System.out.println("inHour -> "+inHour);
         LocalDateTime outHour = ticket.getOutTime();
-        System.out.println("outHour -> "+outHour);
 
         Duration lengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inHour, outHour);
         return lengthOfTimeDuringWhenCarWasParked;
     }
-    public void calculateFare(Ticket ticket){
+    public double calculateFare(Ticket ticket){
         Duration lengthOfTimeDuringWhenCarWasParked = getDurationOfTicket(ticket);
         double hoursOfParkedTime = DateHelperUtil.transformDurationIntoDouble(lengthOfTimeDuringWhenCarWasParked);
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
                 ticket.setPrice(hoursOfParkedTime * Fare.CAR_RATE_PER_HOUR);
                 double carParkingFee = hoursOfParkedTime * Fare.CAR_RATE_PER_HOUR;
-                System.out.println("car x number of hours the car was parked -> "+carParkingFee);
-                break;
+                return carParkingFee;
             }
             case BIKE: {
                 ticket.setPrice(hoursOfParkedTime * Fare.BIKE_RATE_PER_HOUR);
                 double bikeParkingFee = hoursOfParkedTime * Fare.CAR_RATE_PER_HOUR;
                 System.out.println("bike x number of hours the bike was parked -> "+bikeParkingFee);
-                break;
+                return bikeParkingFee;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
         }

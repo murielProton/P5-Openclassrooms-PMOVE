@@ -11,9 +11,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 
@@ -55,16 +55,7 @@ public class TicketDAO {
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
             querryGetTicket.setString(1,vehicleRegNumber);
             ResultSet ticketFromDatabase = querryGetTicket.executeQuery();
-            if(ticketFromDatabase.next()){
-                ticket = new Ticket();
-                ParkingSpot parkingSpot = new ParkingSpot(ticketFromDatabase.getInt(1), ParkingType.valueOf(ticketFromDatabase.getString(6)),false);
-                ticket.setParkingSpot(parkingSpot);
-                ticket.setId(ticketFromDatabase.getInt(2));
-                ticket.setVehicleRegNumber(vehicleRegNumber);
-                ticket.setPrice(ticketFromDatabase.getDouble(3));
-                ticket.setInTime(DateHelperUtil.convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(4)));
-                ticket.setOutTime(DateHelperUtil.convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(5)));
-            }
+            ticket = resultSetToTicket(vehicleRegNumber, ticketFromDatabase);
             dataBaseConfig.closeResultSet(ticketFromDatabase);
             dataBaseConfig.closePreparedStatement(querryGetTicket);
         }catch (Exception ex){
@@ -75,6 +66,48 @@ public class TicketDAO {
         }
         return ticket;
     }
+    public static Ticket getTicketOfExitingVehicul(String vehicleRegNumber) {
+        Connection getTicketConnection = null;
+        Ticket ticket = null;
+        try {
+            getTicketConnection = dataBaseConfig.getConnection();
+            PreparedStatement querryGetTicket = getTicketConnection.prepareStatement(DBConstants.GET_EXITING_VEHICUL_TICKET);
+            querryGetTicket.setString(1, vehicleRegNumber);
+            ResultSet ticketFromDatabase = querryGetTicket.executeQuery();
+            ticket = resultSetToTicket(vehicleRegNumber, ticketFromDatabase);
+            dataBaseConfig.closeResultSet(ticketFromDatabase);
+            dataBaseConfig.closePreparedStatement(querryGetTicket);
+        }catch (Exception ex){
+            logger.error("Error fetching next available slot",ex);
+        }finally {
+            dataBaseConfig.closeConnection(getTicketConnection);
+           
+        }
+        return ticket;
+    }
+	/**
+	 * standard assignment of values of a ticket from database to values of the object ticket
+	 * Must be used every time a ticket is recovered from database
+	 * @param vehicleRegNumber
+	 * @param ticketFromDatabase
+	 * @return
+	 * @throws SQLException
+	 */
+	private static Ticket resultSetToTicket(String vehicleRegNumber, ResultSet ticketFromDatabase)
+			throws SQLException {
+		Ticket ticket = null;
+		if(ticketFromDatabase.next()){
+		    ticket = new Ticket();
+		    ParkingSpot parkingSpot = new ParkingSpot(ticketFromDatabase.getInt(1), ParkingType.valueOf(ticketFromDatabase.getString(6)),false);
+		    ticket.setParkingSpot(parkingSpot);
+		    ticket.setId(ticketFromDatabase.getInt(2));
+		    ticket.setVehicleRegNumber(vehicleRegNumber);
+		    ticket.setPrice(ticketFromDatabase.getDouble(3));
+		    ticket.setInTime(DateHelperUtil.convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(4)));
+		    ticket.setOutTime(DateHelperUtil.convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(5)));
+		}
+		return ticket;
+	}
 
     public static boolean updateTicket(Ticket ticket) {
         Connection updateTicketConnexion = null;
@@ -119,6 +152,21 @@ public class TicketDAO {
         return result;
     }
 
-
+    public static boolean updateOutTimeOfCurrentTicket(Ticket ticket) {
+        Connection updateTicketConnexion = null;
+        try {
+            updateTicketConnexion = dataBaseConfig.getConnection();
+            PreparedStatement querryUpdateTicket = updateTicketConnexion.prepareStatement(DBConstants.UPDATE_OUT_TIME_OF_TICKET);
+            querryUpdateTicket.setTimestamp(1, DateHelperUtil.convertLocalDateTimeToTimestamp(ticket.getOutTime()));
+            querryUpdateTicket.setInt(2, ticket.getId());
+            querryUpdateTicket.execute();
+            return true;
+        }catch (Exception ex){
+            logger.error("Error saving ticket info",ex);
+        }finally {
+            dataBaseConfig.closeConnection(updateTicketConnexion);
+        }
+        return false;
+    }
 
 }

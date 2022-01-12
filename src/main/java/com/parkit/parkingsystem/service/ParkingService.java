@@ -6,7 +6,11 @@ import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
+import com.parkit.parkingsystem.util.DateHelperUtil;
 import com.parkit.parkingsystem.util.InputReaderUtil;
+
+import java.sql.Timestamp;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -102,6 +106,14 @@ public class ParkingService {
             logger.error("Unable to process save Parking Spot",e);
         }
     }
+    public void freeParkingSpot(ParkingSpot parkingSpot){
+        try{
+            parkingSpot.setAvailable(true);
+            parkingSpotDAO.updateParking(parkingSpot);
+        }catch(Exception e){
+            logger.error("Unable to process save Parking Spot",e);
+        }
+    }
     public void saveIncomingVehicleInDB(ParkingSpot parkingSpot, String vehicleRegNumber) {
         try{
             if(parkingSpot !=null && parkingSpot.getId() > 0){
@@ -132,15 +144,14 @@ public class ParkingService {
     		return null;
     	}
     }
-    public void updateTicketOutTime(Ticket ticket) {
-    	try {
-    		ticket.setOutTime(LocalDateTime.now());
-    	}catch(Exception e) {
-    		logger.error("Unable to update ticket with the right out time.");
-    	}
-    }
-	public void updateTicketAndParkingSpotAfterPayement(Ticket ticket) {
-		// TODO Auto-generated method stub
+	/*public void updateTicketAndParkingSpotAfterPayement(Ticket ticket) {
+		ticket.setPrice(0);
+		ParkingSpot parkingSpot = new ParkingSpot();
+		freeParkingSpot(parkingSpot);
+	}*/
+	public static void updateOutTimeOfTicketForExitingVehicle(Ticket ticket, LocalDateTime outTime) {
+		ticket.setOutTime(outTime);
+		TicketDAO.updateOutTimeOfCurrentTicket(ticket);
 		
 	}
 }

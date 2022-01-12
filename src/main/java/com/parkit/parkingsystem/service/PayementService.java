@@ -19,11 +19,11 @@ public class PayementService {
 	
 	private static final Logger logger = LogManager.getLogger("PayementServiceExceptions");
 	
-    public static Ticket getTicketForExitingVehicules(String vehiculeRegNumber){
-        Ticket ticketOfCurrentExitintVehicule = TicketDAO.getTicket(vehiculeRegNumber);
+    public static Ticket getTicketOfExitingVehicleAndSetOutTime(String vehiculRegNumber){
+        Ticket ticketOfExitingVehicle = TicketDAO.getTicketOfExitingVehicul(vehiculRegNumber);
         LocalDateTime outTime = LocalDateTime.now();
-        ticketOfCurrentExitintVehicule.setOutTime(outTime);
-        return ticketOfCurrentExitintVehicule;
+        ParkingService.updateOutTimeOfTicketForExitingVehicle(ticketOfExitingVehicle, outTime);
+        return ticketOfExitingVehicle;
     }
     public boolean updateTicketAndParkingSpotAfterPayement(Ticket ticket) {
 	    try {

@@ -39,7 +39,7 @@ public class ParkingServiceTest {
 
     @BeforeEach
     private void setUpPerTest() {
-            parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+            parkingService = new ParkingService(parkingSpotDAO, ticketDAO);
     }
 
     @Test

@@ -23,7 +23,6 @@ public class InputReaderUtil {
 
 	public static String readVehicleRegistrationNumber() throws Exception {
 		String vehicleRegNumber = scan.nextLine();
-		RegistrationNumberSecurityUtil securityRegNumber = new RegistrationNumberSecurityUtil(vehicleRegNumber);
 		if (RegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber)) {
 			return vehicleRegNumber;
 		}

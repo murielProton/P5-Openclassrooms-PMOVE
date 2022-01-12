@@ -13,9 +13,7 @@ import com.parkit.parkingsystem.util.RegistrationNumberSecurityUtil;
 public class IncomingVehicleController{
     private boolean needStopVehicleType = false;
     private ParkingType currentType = null;
-    private String vehicleRegNumber = null;
     private ParkingService parkingService;
-    RegistrationNumberSecurityUtil instanceOfRegistrationNumberSecurityUtil = new RegistrationNumberSecurityUtil(vehicleRegNumber);
     
     public IncomingVehicleController(ParkingService parkingService) {
         this.parkingService = parkingService;
@@ -66,8 +64,8 @@ public class IncomingVehicleController{
         if(parkingService.isThereAParkingSpotForType(currentType)){
             while(needStopVehicleType==false){
                 try {
-                    vehicleRegNumber = RegistrationNumberController.inputRegistrationNumber();
-                    if(instanceOfRegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber) &&
+                    String vehicleRegNumber = RegistrationNumberController.inputRegistrationNumber();
+                    if(RegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber) &&
                     !parkingService.isThereAlreadyThisVehicleInDB(vehicleRegNumber, currentType)){
                         runSavingTicket(vehicleRegNumber, currentType);
                     }else{
