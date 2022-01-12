@@ -32,6 +32,7 @@ public class TicketDAO {
             //querrySaveTicket.setInt(1,ticket.getId());
             querrySaveTicket.setInt(1,ticket.getParkingSpot().getId());
             querrySaveTicket.setString(2, ticket.getVehicleRegNumber());
+            
             querrySaveTicket.setDouble(3, ticket.getPrice());
             querrySaveTicket.setTimestamp(4, DateHelperUtil.convertLocalDateTimeToTimestamp(ticket.getInTime()));
             querrySaveTicket.setTimestamp(5, null);
@@ -75,7 +76,7 @@ public class TicketDAO {
         return ticket;
     }
 
-    public boolean updateTicket(Ticket ticket) {
+    public static boolean updateTicket(Ticket ticket) {
         Connection updateTicketConnexion = null;
         try {
             updateTicketConnexion = dataBaseConfig.getConnection();
@@ -104,8 +105,6 @@ public class TicketDAO {
             ResultSet ticketsFromDatabase = ps.executeQuery();
             // get only the first line of the result of the querry
             if(ticketsFromDatabase.next()){
-                System.out.println("getTicketIfVehiculeAlreadyInside - " + ticketsFromDatabase.getString(1));
-                System.out.println("getTicketIfVehiculeAlreadyInside - " + ticketsFromDatabase);
                 result = ticketsFromDatabase.getInt(1); 
             }
             //close execution of the querry wich is the 'array' returned by the querry
@@ -117,9 +116,9 @@ public class TicketDAO {
         }finally {
             dataBaseConfig.closeConnection(con);
         }
-        System.out.println("getTicketIfVehiculeAlreadyInside" + vehicleRegNumber+" - "+ parkingType +" result "+result);
         return result;
     }
+
 
 
 }

@@ -38,7 +38,7 @@ public class ParkingSpotDAO {
     }
 
     public boolean updateParking(ParkingSpot parkingSpot){
-        //update the availability fo that parking slot
+        //update the availability for that parking slot
         Connection con = null;
         try {
             con = dataBaseConfig.getConnection();
@@ -52,7 +52,7 @@ public class ParkingSpotDAO {
             logger.error("Error updating parking info",ex);
             return false;
         }finally {
-            dataBaseConfig.closeConnection(con);
+        	dataBaseConfig.closeConnection(con);
         }
     }
     public int getTotalNumberOfAvailableSlot(){

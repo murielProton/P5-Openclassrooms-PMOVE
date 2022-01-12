@@ -1,6 +1,7 @@
 package com.parkit.parkingsystem.controller;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
@@ -14,8 +15,8 @@ public class IncomingVehicleController{
     private ParkingType currentType = null;
     private String vehicleRegNumber = null;
     private ParkingService parkingService;
-    private ParkingSpotDAO parkingSpotDAO;
     RegistrationNumberSecurityUtil instanceOfRegistrationNumberSecurityUtil = new RegistrationNumberSecurityUtil(vehicleRegNumber);
+    
     public IncomingVehicleController(ParkingService parkingService) {
         this.parkingService = parkingService;
     }
@@ -68,7 +69,6 @@ public class IncomingVehicleController{
                     vehicleRegNumber = RegistrationNumberController.inputRegistrationNumber();
                     if(instanceOfRegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber) &&
                     !parkingService.isThereAlreadyThisVehicleInDB(vehicleRegNumber, currentType)){
-                        System.out.println("run save in database.");
                         runSavingTicket(vehicleRegNumber, currentType);
                     }else{
                         System.out.println("Incorrect vehicule registered number.");
@@ -97,10 +97,10 @@ public class IncomingVehicleController{
         }
     }
     private void successInSavingTicket(String vehicleRegNumber, LocalDateTime inTime, ParkingSpot parkingSpot){
-        System.out.println("Generated Ticket and saved in DB.");
-        System.out.println("You've entered this day :"+ inTime);
-        System.out.println("Recorded in-time for vehicle number:"+vehicleRegNumber+".");
-        System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    	String dateAndTimeOfArrival = inTime.format(formatter);
+        System.out.println("You've entered this day : "+ dateAndTimeOfArrival);
+        System.out.println("Please park your vehicle in spot number : "+parkingSpot.getId());
         System.out.println("The gate opens !");
     }
 }

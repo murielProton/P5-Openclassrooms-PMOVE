@@ -29,10 +29,7 @@ public class ParkingService {
 
     
 
-    private String getVehichleRegNumber() throws Exception {
-        System.out.println("Please type the vehicle registration number and press enter key");
-        return InputReaderUtil.readVehicleRegistrationNumber();
-    }
+
     
     public ParkingSpot getNextParkingNumberIfAvailable(ParkingType parkingType){
         int parkingNumber=0;
@@ -42,7 +39,7 @@ public class ParkingService {
             if(parkingNumber > 0){
                 parkingSpot = new ParkingSpot(parkingNumber,parkingType, true);
             }else{
-                throw new Exception("Error fetching parking number from DB. Parking slots might be full");
+                throw new Exception("Error fetching parking number from DB. Parking slots might be full.");
             }
         }catch(IllegalArgumentException ie){
             logger.error("Error parsing user input for type of vehicle", ie);
@@ -82,29 +79,7 @@ public class ParkingService {
         return null;
     }
 
-    public void processExitingVehicle() {
-        try{            
-            String vehicleRegNumber = getVehichleRegNumber();
-            Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
-            LocalDateTime outTime = LocalDateTime.now();
-            ticket.setOutTime(outTime);
-            fareCalculatorService.calculateFare(ticket);
-            if(ticketDAO.updateTicket(ticket)) {
-                ParkingSpot parkingSpot = ticket.getParkingSpot();
-                parkingSpot.setAvailable(true);
-                parkingSpotDAO.updateParking(parkingSpot);
-                System.out.println("Please pay the parking fare : " + ticket.getPrice());
-                System.out.println("Recorded out-time for vehicle number : " + ticket.getVehicleRegNumber() + " is : " + outTime);
-                //put here window to payement param ticket + parkingSpot
-                //PayementController.asLongAsPayementHasNOTBeenMade();
-            }else{
-                System.out.println("Unable to update ticket information. Error occurred");
-            }
-        }catch(Exception e){
-            logger.error("Unable to process exiting vehicle", e);
-            throw new RuntimeException("Unable to process exiting vehicle", e);
-        }
-    }
+   
     /** Old Methods TODO sort throug
      * -------------------------------------
      * New methods by Muriel
@@ -117,7 +92,6 @@ public class ParkingService {
     }
     public boolean isThereAlreadyThisVehicleInDB(String registrationNumber, ParkingType parkingType){
         boolean result = ticketDAO.getTicketIfVehiculeAlreadyInside(registrationNumber, parkingType) > 0;
-        System.out.println("isThereAlreadyThisVehicleInDB" + registrationNumber+" - "+ parkingType +" result "+result);
         return ticketDAO.getTicketIfVehiculeAlreadyInside(registrationNumber, parkingType) > 0;
     }
     public void saveParkingSpot(ParkingSpot parkingSpot){
@@ -149,4 +123,24 @@ public class ParkingService {
             logger.error("Unable to save incoming vehicle",e);
         }
     }
+    public Ticket getTicketForExitingVehicle(String vehicleRegistrationNumber) {
+    	try {
+	    	Ticket currentTicket = TicketDAO.getTicket(vehicleRegistrationNumber);
+	    	return currentTicket;
+    	}catch(Exception e) {
+    		logger.error("Unable to find this outcomming vehicle number : "+vehicleRegistrationNumber,e);
+    		return null;
+    	}
+    }
+    public void updateTicketOutTime(Ticket ticket) {
+    	try {
+    		ticket.setOutTime(LocalDateTime.now());
+    	}catch(Exception e) {
+    		logger.error("Unable to update ticket with the right out time.");
+    	}
+    }
+	public void updateTicketAndParkingSpotAfterPayement(Ticket ticket) {
+		// TODO Auto-generated method stub
+		
+	}
 }

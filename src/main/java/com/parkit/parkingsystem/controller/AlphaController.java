@@ -4,6 +4,7 @@ import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,6 +16,7 @@ public class AlphaController {
     private TicketDAO ticketDAO = new TicketDAO();
     private ParkingService parkingService = new ParkingService(parkingSpotDAO, ticketDAO);
     private IncomingVehicleController incomingVehicleController = new IncomingVehicleController(parkingService);
+    private ExitingVehicleController exitingVehicleController = new ExitingVehicleController(parkingService);
     
     
 
@@ -59,7 +61,7 @@ public class AlphaController {
             case 2: {
                 //TODO Faire la méthode associée.
                 System.out.println("doExitingVehicle");
-                //doExitingVehicle();
+            	exitingVehicleController.processExitingVehicle();
                 break;
             }
             case 3: {

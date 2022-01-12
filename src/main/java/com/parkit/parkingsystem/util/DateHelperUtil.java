@@ -20,17 +20,23 @@ public class DateHelperUtil {
         return durationTypeConvertedToDouble;
     }
     public static Timestamp convertLocalDateTimeToTimestamp(LocalDateTime aDateAndTime){
-        Timestamp aTimeStamp = Timestamp.valueOf(aDateAndTime);
-        return aTimeStamp;
+    	if(aDateAndTime == null) {
+    		return null;
+    	}
+    	return Timestamp.valueOf(aDateAndTime);
     }
     
     public static LocalDateTime convertTimestampsToLocalDateTime(Timestamp aTimestamp){
-        LocalDateTime aLocalDateTime = aTimestamp.toLocalDateTime();
-        return aLocalDateTime;
+    	if(aTimestamp == null) {
+    		return null;
+    	}
+    	return aTimestamp.toLocalDateTime();
     }
 
     public static LocalDateTime convertDateToLocalDateTime(Date aDate){
-        LocalDateTime aLocalDateTime = LocalDateTime.ofInstant(aDate.toInstant(), ZoneId.systemDefault());
-        return aLocalDateTime;
+    	if(aDate == null) {
+    		return null;
+    	}
+    	return LocalDateTime.ofInstant(aDate.toInstant(), ZoneId.systemDefault());
     }
 }
