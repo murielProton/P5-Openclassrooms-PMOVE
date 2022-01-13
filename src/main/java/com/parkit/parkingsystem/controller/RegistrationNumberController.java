@@ -2,7 +2,19 @@ package com.parkit.parkingsystem.controller;
 
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
+/**
+ * @author Muriel Proton
+ *
+ */
 public class RegistrationNumberController {
+	
+    /**
+     * Used in Class IncomingVehicleController by Method : runRegistrationNumberController(ParkingType)
+     * Used in Class ExitingVehicleController by Method : getRegistrationNumber()
+     * @param NONE
+     * @return STRING
+     * @throws Exception
+     */
     public static String inputRegistrationNumber() throws Exception {
         String registrationNumber = null;
         try{

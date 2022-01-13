@@ -14,15 +14,23 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 
+/**
+ * @author Muriel Proton
+ *
+ */
 public class TicketDAO {
 
     private static final Logger logger = LogManager.getLogger("TicketDAO");
 
     public static DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    /**
+     * Used in Class : ParkingService by Method : saveIncomingVehicleInDB(ParkingSpot, String)
+     * @param Ticket
+     * @return boolean
+     */
     public boolean saveTicket(Ticket ticket){
         Connection saveTicketConnection = null;
         try {
@@ -46,6 +54,11 @@ public class TicketDAO {
         return false;
     }
 
+    /**
+     * Used in Class : ParkingService by Method : getTicketForExitingVehicle(String)
+     * @param STRING vehicleRegNumber
+     * @return Ticket
+     */
     public static Ticket getTicket(String vehicleRegNumber) {
         Connection getTicketConnection = null;
         Ticket ticket = null;
@@ -66,6 +79,12 @@ public class TicketDAO {
         }
         return ticket;
     }
+    
+    /**
+     * Used in Class : ParkingService by Method : getTicketOfExitingVehicleAndSetOutTime(String)
+     * @param STRING vehicleRegNumber
+     * @return Ticket
+     */
     public static Ticket getTicketOfExitingVehicul(String vehicleRegNumber) {
         Connection getTicketConnection = null;
         Ticket ticket = null;
@@ -88,9 +107,10 @@ public class TicketDAO {
 	/**
 	 * standard assignment of values of a ticket from database to values of the object ticket
 	 * Must be used every time a ticket is recovered from database
-	 * @param vehicleRegNumber
-	 * @param ticketFromDatabase
-	 * @return
+	 * Used in Class : TicketDAO by Method : getTicket(String) &  getTicketOfExitingVehicul(String)
+	 * @param STRING vehicleRegNumber
+	 * @param ResultSet ticketFromDatabase
+	 * @return Ticket
 	 * @throws SQLException
 	 */
 	private static Ticket resultSetToTicket(String vehicleRegNumber, ResultSet ticketFromDatabase)
@@ -109,6 +129,11 @@ public class TicketDAO {
 		return ticket;
 	}
 
+    /**
+     * Used in Class : ParkingService by Method : updateTicketAndParkingSpotAfterPayement(Ticket)
+     * @param Ticket
+     * @return boolean
+     */
     public static boolean updateTicket(Ticket ticket) {
         Connection updateTicketConnexion = null;
         try {
@@ -126,6 +151,13 @@ public class TicketDAO {
         }
         return false;
     }
+    
+    /**
+     * Used in Class : ParkingService by Method : isThereAlreadyThisVehicleInDB(String, ParkingType)
+     * @param STRING vehicleRegNumber
+     * @param ParkingType parkingType
+     * @return integer
+     */
     public int getTicketIfVehiculeAlreadyInside(String vehicleRegNumber, ParkingType parkingType){
         Connection con = null;
         int result =0;
@@ -151,7 +183,13 @@ public class TicketDAO {
         }
         return result;
     }
+    
 
+    /**
+     * Used in Class : ParkingService by Method : updateOutTimeOfTicketForExitingVehicle(Ticket ticket, LocalDateTime outTime)
+     * @param Ticket
+     * @return boolean
+     */
     public static boolean updateOutTimeOfCurrentTicket(Ticket ticket) {
         Connection updateTicketConnexion = null;
         try {
@@ -168,6 +206,12 @@ public class TicketDAO {
         }
         return false;
     }
+    /**
+     * Used in Class : ParkingService by Method : updatePriceOfCurrentTicket(Ticket, Double)
+     * @param Ticketticket
+     * @param DOUBLE price
+     * @return boolean
+     */
     public static boolean updatePriceOfCurrentTicket(Ticket ticket, Double price) {
         Connection updateTicketConnexion = null;
         try {

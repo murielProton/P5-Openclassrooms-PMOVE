@@ -4,20 +4,34 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import com.parkit.parkingsystem.util.RegistrationNumberSecurityUtil;
 
+/**
+ * @author Muriel Proton
+ *
+ */
 public class IncomingVehicleController{
     private boolean needStopVehicleType = false;
     private ParkingType currentType = null;
     private ParkingService parkingService;
     
+    /**
+     * CONSTRUCTOR method
+     * Used in Class AlphaController
+     * @param ParkingService
+     */
     public IncomingVehicleController(ParkingService parkingService) {
         this.parkingService = parkingService;
     }
+    
+    /**
+     * Used in Class AlphaController by Method : processSelectAction(integer)
+     * @param NONE
+     * @return VOID
+     */
     public void runSelectVehicleType(){
         if(parkingService.isThereAParkingSpotForAnyType()){
             while(needStopVehicleType==false){
@@ -28,6 +42,12 @@ public class IncomingVehicleController{
             System.out.println("Please accept our sincere appologies, while waiting.");
         }
     }
+    
+    /**
+     * Used in Class IncomingVehicleController by Method : runSelectVehicleType()
+     * @param NONE
+     * @return VOID
+     */
     public void selectVehicleType(){
             System.out.println("Please select vehicle type from menu");
             System.out.println("1 CAR");
@@ -35,6 +55,11 @@ public class IncomingVehicleController{
             int selectVihicleType = InputReaderUtil.readInt();
             processSelectedType(selectVihicleType);
     }
+    /**
+     * Used in Class IncomingVehicleController by Method : selectVehicleType()
+     * @param INTEGER vehicleType
+     * @return ParkingType
+     */
     private ParkingType processSelectedType(int vehicleType) {
         switch(vehicleType){
                 case 1: {
@@ -59,6 +84,11 @@ public class IncomingVehicleController{
             }
             return null;
     }
+    /**
+     * Used in Class IncomingVehicleController by Method : processSelectedType(INTEGER)
+     * @param ParkingType
+     * @return VOID
+     */
     private void runRegistrationNumberController(ParkingType currentType) {
         if(parkingService.isThereAParkingSpotForType(currentType)){
             while(needStopVehicleType==false){
@@ -79,6 +109,12 @@ public class IncomingVehicleController{
             System.out.println("Please accept our sincere appologies, while waiting.");
         }
     }
+    /**
+     * Used in Class IncomingVehicleController by Method : runRegistrationNumberController(ParkingType)
+     * @param STRING vehicleRegNumber
+     * @param ParkingType
+     * @return VOID
+     */
     private void runSavingTicket(String vehicleRegNumber, ParkingType currentType){
         try{
             LocalDateTime inTime = LocalDateTime.now();
@@ -92,6 +128,13 @@ public class IncomingVehicleController{
             System.out.println("Unable to process incoming vehicle");
         }
     }
+    /**
+     * Used in Class IncomingVehicleController by Method : runSavingTicket(String, ParkingType)
+     * @param STRING vehicleRegNumber
+     * @param LOCALDATETIME inTime
+     * @param ParkingSpot
+     * @return VOID
+     */
     private void successInSavingTicket(String vehicleRegNumber, LocalDateTime inTime, ParkingSpot parkingSpot){
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     	String dateAndTimeOfArrival = inTime.format(formatter);

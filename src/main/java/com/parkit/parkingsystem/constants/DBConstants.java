@@ -1,9 +1,16 @@
 package com.parkit.parkingsystem.constants;
 
+
+/**
+ * All the constant to search, save, update in databas
+ * two tables : parking and ticket
+ * one database : prod
+ * @author Proton
+ *
+ */
 public class DBConstants {
 
     public static final String GET_NEXT_PARKING_SPOT = "select min(PARKING_NUMBER) from parking where AVAILABLE = true and TYPE = ?";
-    public static final String GET_PARKING_SPOT_OF_EXITING_VEHICLE = "select PARKING_NUMBER, AVAILABLE, TYPE from parking where PARKING_NUMBER = ?";
     public static final String GET_NUMBER_OF_AVAILABLE_PARKING_SPOT = "select count(*) from parking where AVAILABLE = true";
     public static final String GET_NUMBER_OF_AVAILABLE_PARKING_SPOT_TYPE = "select count(*) from parking where AVAILABLE = true and TYPE = ?";
     public static final String UPDATE_PARKING_SPOT = "update parking set available = ? where PARKING_NUMBER = ?";

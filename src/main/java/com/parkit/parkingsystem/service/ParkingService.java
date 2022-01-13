@@ -6,32 +6,43 @@ import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
-import com.parkit.parkingsystem.util.InputReaderUtil;
 
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDateTime;
+//TODO SORT INTO 3 categories Ticket | ParkingSpot | Both
 
+/**
+ * @author Muriel Proton
+ *
+ */
 public class ParkingService {
 
-    private static final Logger logger = LogManager.getLogger("ParkingService");
+	private static final Logger logger = LogManager.getLogger("ParkingService");
 
 
     private ParkingSpotDAO parkingSpotDAO;
     private TicketDAO ticketDAO;
 
+    /**
+     * CONSTRUCTOR method
+     * Used in Class AlphaController to instantiate IncomingVehicleController & ExitingVehicleController
+     * @param ParkingSpotDAO
+     * @param TicketDAO
+     */
     public ParkingService(ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO){
 
         this.parkingSpotDAO = parkingSpotDAO;
         this.ticketDAO = ticketDAO;
     }
 
-    
-
-
-    
+    /**
+     * Used in Class IncomingVehicleController by Method : runSavingTicket(String, ParkingType)
+     * @param ParkingType
+     * @return ParkingSpot
+     */
     public ParkingSpot getNextParkingNumberIfAvailable(ParkingType parkingType){
         int parkingNumber=0;
         ParkingSpot parkingSpot = null;
@@ -49,51 +60,36 @@ public class ParkingService {
         }
         return parkingSpot;
     }
-    private static void loadMenuGetVehiculeType(){
-        System.out.println("Please select vehicle type from menu");
-        System.out.println("1 CAR");
-        System.out.println("2 BIKE");
-    }
     /**
-     * calls on next methode getVehichleType(gets info form terminal)
-     */
-    public ParkingType runGetVehichleType (){
-        ParkingType type = null;
-        while(type == null){
-            loadMenuGetVehiculeType();
-            type = getVehichleType(InputReaderUtil.readSelection());
-        }
-        return type;
-    }
-    public ParkingType getVehichleType(int input){
-        switch(input){
-            case 1: {
-                return ParkingType.CAR;
-            }
-            case 2: {
-                return ParkingType.BIKE;
-            }
-            default: {
-                System.out.println("Incorrect input provided");
-            }
-        }
-        return null;
-    }
-
-   
-    /** Old Methods TODO sort throug
-     * -------------------------------------
-     * New methods by Muriel
+     * Used in Class IncomingVehicleController by Method : runSelectVehicleType()
+     * @param NONE
+     * @return BOOLEAN
      */
     public boolean isThereAParkingSpotForAnyType(){
         return parkingSpotDAO.getTotalNumberOfAvailableSlot() > 0;
     }
+    /**
+     * Used in Class IncomingVehicleController by Method : runRegistrationNumberController(ParkingType)
+     * @param ParkingType
+     * @return BOOLEAN
+     */
     public boolean isThereAParkingSpotForType(ParkingType parkingType){
         return parkingSpotDAO.getNumberOfAvailableSlotForType(parkingType) > 0;
     }
+    /**
+     * Used in Class IncomingVehicleController by Method : runRegistrationNumberController(ParkingType)
+     * @param registrationNumber
+     * @param ParkingType
+     * @return
+     */
     public boolean isThereAlreadyThisVehicleInDB(String registrationNumber, ParkingType parkingType){
         return ticketDAO.getTicketIfVehiculeAlreadyInside(registrationNumber, parkingType) > 0;
     }
+    /**
+     * Used in Class IncomingVehicleController by Method : runSavingTicket(String, ParkingType)
+     * @param ParkingSpot
+     * @return VOID
+     */
     public void fillParkingSpot(ParkingSpot parkingSpot){
         try{
         	parkingSpot.setAvailable(false);
@@ -102,6 +98,11 @@ public class ParkingService {
             logger.error("Unable to fill Parking Spot",e);
         }
     }
+    /**
+     * Used in Class ExitingVehicleController by Method : processExitingVehicle()
+     * @param parkingSpot
+     * @return VOID
+     */
     public void emptyParkingSpot(ParkingSpot parkingSpot){
         try{
             parkingSpot.setAvailable(true);
@@ -110,6 +111,12 @@ public class ParkingService {
             logger.error("Unable to empty Parking Spot",e);
         }
     }
+    /**
+     * Used in Class IncomingVehicleController by Method : runSavingTicket(String, ParkingType)
+     * @param ParkingType
+     * @param STRING vehicleRegNumber
+     * @return VOID
+     */
     public void saveIncomingVehicleInDB(ParkingSpot parkingSpot, String vehicleRegNumber) {
         try{
             if(parkingSpot !=null && parkingSpot.getId() > 0){
@@ -131,20 +138,24 @@ public class ParkingService {
             logger.error("Unable to save incoming vehicle",e);
         }
     }
-    public Ticket getTicketForExitingVehicle(String vehicleRegistrationNumber) {
-    	try {
-	    	Ticket currentTicket = TicketDAO.getTicket(vehicleRegistrationNumber);
-	    	return currentTicket;
-    	}catch(Exception e) {
-    		logger.error("Unable to find this outcomming vehicle number : "+vehicleRegistrationNumber,e);
-    		return null;
-    	}
-    }
+    
+	/**
+	 * Used in Class PayementService by Method : getTicketOfExitingVehicleAndSetOutTime(String)
+	 * @param Ticket
+	 * @param LocalDateTime outTime
+	 * @return VOID
+	 */
 	public static void updateOutTimeOfTicketForExitingVehicle(Ticket ticket, LocalDateTime outTime) {
 		ticket.setOutTime(outTime);
 		TicketDAO.updateOutTimeOfCurrentTicket(ticket);
 		
 	}
+	/**
+	 * Used in Class ExitingVehicleController by Method : processExitingVehicle()
+	 * @param Ticket
+	 * @param DOUBLE price
+	 * @return VOID
+	 */
 	public static void updatePriceOfCurrentTicket(Ticket ticket, Double price) {
 		ticket.setPrice(price);
 		TicketDAO.updatePriceOfCurrentTicket(ticket, price);

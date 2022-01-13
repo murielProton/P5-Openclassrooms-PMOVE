@@ -11,19 +11,29 @@ import com.parkit.parkingsystem.service.FareCalculatorService;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.service.PayementService;
 
+/**
+ * @author Muriel Proton
+ *
+ */
 public class ExitingVehicleController {
 
 	private ParkingService parkingService;
 	private static final Logger logger = LogManager.getLogger("ExitingVehicleController");
 
+	/**
+	 * CONSTRUCTOR method
+     * Used in Class  AlphaController 
+     * @param ParkingService
+	 */
 	public ExitingVehicleController(ParkingService parkingService) {
 		this.parkingService = parkingService;
 	}
 
 	/*
 	 * gets the registration number of vehicle
-	 * 
+	 * Used in Class processExitingVehicle by Method : processExitingVehicle
 	 * @param NONE
+	 * @return STRING
 	 **/
 	public String getRegistrationNumber() {
 		try {
@@ -37,8 +47,9 @@ public class ExitingVehicleController {
 
 	/**
 	 * gets price of the ticket
-	 * 
-	 * @param String vehicleRegNumber
+	 * Used in Class processExitingVehicle by Method : processExitingVehicle 
+	 * @param STRING vehicleRegNumber
+	 * @return Ticket
 	 */
 	public Ticket getTicketOfExitingVehicleAndSetOutTime(String vehiculRegNumber) {
 		try {
@@ -61,8 +72,9 @@ public class ExitingVehicleController {
 
 	/**
 	 * gets price of the ticket
-	 * 
+	 * Used in Class processExitingVehicle by Method : processExitingVehicle 
 	 * @param Ticket ticket
+	 * @return DOUBLE
 	 */
 	public Double getExitingVehiculePriceFare(Ticket ticket) {
 		try {
@@ -78,9 +90,9 @@ public class ExitingVehicleController {
 
 	/**
 	 * upadates ticket and parking spot's avalability
-	 * TODO Please insert Security of payement Here
-	 * 
-	 * @param Double price
+	 * Used in Class processExitingVehicle by Method : processExitingVehicle 
+	 * @param DOUBLE price
+	 * @return BOOLEAN
 	 */
 	public boolean payementTerminal(Double currentPrice) {
 		System.out.println("Please insert your CB, and folow the instructions on screen.");
@@ -96,14 +108,13 @@ public class ExitingVehicleController {
 
 	/**
 	 * This method has 2 actions 1 updates parking spot and ticket 2 opens the gate
-	 * 
-	 * @param boolean payementValidated, Ticket ticket
+	 * Used in Class processExitingVehicle by Method : processExitingVehicle 
+	 * @param BOOLEAN payementValidated, Ticket
+	 * @return VOID
 	 */
 	public void openGateForExitingVehicle(boolean payementValidated, Ticket ticket) {
 		if (payementValidated) {
 			try {
-				// TODO Update ParkingSpot as free
-				/*parkingService.updateTicketAndParkingSpotAfterPayement(ticket);*/
 				System.out.println("Please exite by the opening gate.");
 			} catch (Exception e) {
 				System.out.println("Unable to update ticket information. Error occurred");
@@ -116,8 +127,9 @@ public class ExitingVehicleController {
 
 	/**
 	 * runs all the methods of this class
-	 * 
+	 * Used in Class AlphaController by Method : processSelectAction(integer)
 	 * @param NONE
+	 * @return VOID
 	 */
 	public void processExitingVehicle() {
 		String vehiculRegNumber = getRegistrationNumber();

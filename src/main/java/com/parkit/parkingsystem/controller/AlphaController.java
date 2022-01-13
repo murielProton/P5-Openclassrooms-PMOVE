@@ -8,6 +8,10 @@ import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * @author Muriel Proton
+ *
+ */
 public class AlphaController {
 
     private boolean working = true;
@@ -21,7 +25,11 @@ public class AlphaController {
     
 
     /**
-     * calls on next methode run
+     * calls on next method run
+     * Used in Class IncomingVehicleController by Method : runSavingTicket(String, ParkingType)
+     * Used in Class App by Method : main(String)
+     * @param NONE
+     * @return VOID
      */
     public static void loadInterface(){
         logger.info("App initialized!!!");
@@ -29,11 +37,21 @@ public class AlphaController {
         AlphaController myAlphaController= new AlphaController();
         myAlphaController.run();       
     }
+    /**
+    * Used in Class AlphaController by Method : loadInterface
+    * @param NONE
+     * @return VOID
+    */
     public void run(){
         while(working){
             selectionAction();
         }
     }
+    /**
+    * Used in Class AlphaController by Method : run()
+    * @param NONE
+     * @return VOID
+    */
     public void selectionAction(){
         //Display
         System.out.println("Please select an option. Simply enter the number to choose an action");
@@ -49,18 +67,18 @@ public class AlphaController {
 
     /**
      * Excute the right methode or CASE
-     * Returns True if App must continue
+     * Returns True if App must continue 
+     * Used in Class AlphaController by Method : selectionAction()
+     * @param INTEGER action
+     * @return VOID
      */
     public void processSelectAction(int action){
         switch(action){
             case 1: {
                 incomingVehicleController.runSelectVehicleType();
                 break;
-
             }
             case 2: {
-                //TODO Faire la méthode associée.
-                System.out.println("doExitingVehicle");
             	exitingVehicleController.processExitingVehicle();
                 break;
             }

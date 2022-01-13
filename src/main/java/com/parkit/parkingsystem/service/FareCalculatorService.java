@@ -7,7 +7,16 @@ import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.util.DateHelperUtil;
 
+/**
+ * @author Muriel Proton
+ *
+ */
 public class FareCalculatorService {
+    /**
+     * Used in Class FareCalculatorService by Method : calculateFare(Ticket)
+     * @param Ticket
+     * @return DURATION
+     */
     public Duration getDurationOfTicket(Ticket ticket){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().isBefore(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect: "+ticket.getOutTime());
@@ -19,6 +28,11 @@ public class FareCalculatorService {
         Duration lengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inHour, outHour);
         return lengthOfTimeDuringWhenCarWasParked;
     }
+    /**
+     * Used in Class ExitingVehicleController by Method : getExitingVehiculePriceFare(Ticket)
+     * @param Ticket
+     * @return DOUBLE
+     */
     public double calculateFare(Ticket ticket){
         Duration lengthOfTimeDuringWhenCarWasParked = getDurationOfTicket(ticket);
         double hoursOfParkedTime = DateHelperUtil.transformDurationIntoDouble(lengthOfTimeDuringWhenCarWasParked);

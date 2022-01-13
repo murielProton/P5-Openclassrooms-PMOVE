@@ -4,8 +4,6 @@ import com.parkit.parkingsystem.config.DataBaseConfig;
 import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
-import com.parkit.parkingsystem.model.Ticket;
-import com.parkit.parkingsystem.util.DateHelperUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,13 +11,20 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
+/**
+ * @author Muriel Proton
+ *
+ */
 public class ParkingSpotDAO {
     private static final Logger logger = LogManager.getLogger("ParkingSpotDAO");
-
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    /**
+     * Used in Class ParkingService by Method : getNextParkingNumberIfAvailable(ParkingType)
+     * @param ParkingType
+     * @return INTEGER
+     */
     public int getNextAvailableSlot(ParkingType parkingType){
         Connection con = null;
         int result=-1;
@@ -41,6 +46,12 @@ public class ParkingSpotDAO {
         return result;
     }
 
+    /**
+     * Used in Class ParkingService by Method : fillParkingSpot(ParkingSpot) & emptyParkingSpot(ParkingSpot)
+     * Used in Class PayementService by Method updateTicketAndParkingSpotAfterPayement(Ticket)
+     * @param parkingSpot
+     * @return BOOLEAN
+     */
     public boolean updateParking(ParkingSpot parkingSpot){
         //update the availability for that parking slot
         Connection con = null;
@@ -59,6 +70,10 @@ public class ParkingSpotDAO {
         	dataBaseConfig.closeConnection(con);
         }
     }
+    /**
+     * Used in Class ParkingService by Method : isThereAParkingSpotForAnyType()
+     * @return INTEGER
+     */
     public int getTotalNumberOfAvailableSlot(){
         Connection con = null;
         int result=0;
@@ -80,6 +95,11 @@ public class ParkingSpotDAO {
         }
         return result;
     }
+    /**
+     * Used in Class ParkingService by Method : isThereAParkingSpotForType(ParkingType)
+     * @param ParkingType
+     * @return INTEGER
+     */
     public int getNumberOfAvailableSlotForType(ParkingType parkingType){
         Connection con = null;
         int result=0;
@@ -105,41 +125,4 @@ public class ParkingSpotDAO {
         }
         return result;
     }
-    /*TODO
-    public ParkingSpot getParkingSpotOfExitingVehicle(String idOfParkingSpot) {
-    	ParkingSpot parkingSpotOfExitingVehicle = new ParkingSpot();
-    	 Connection con = null;
-         int result=0;
-         try {
-             con = dataBaseConfig.getConnection();
-             return parkingSpotOfExitingVehicle;
-             PreparedStatement ps = con.prepareStatement(DBConstants.GET_PARKING_SPOT_OF_EXITING_VEHICLE);
-             ps.setString(1, idOfParkingSpot);
-             ResultSet parkingSpotResult = ps.executeQuery();
-             // get only the first line of the result of the querry
-             if(parkingSpotResult.next()){
-                 result = parkingSpotResult.getInt(1); 
-             }
-             //close execution of the querry wich is the 'array' returned by the querry
-             dataBaseConfig.closeResultSet(parkingSpotResult);
-             //close the prepared statement or link to db
-             dataBaseConfig.closePreparedStatement(ps);
-         }catch(Exception ex){
-        	 logger.error("Error fetching parking slot for this exiting vehicle.",ex);
-         }
-    	
-    }
-
-    private static Ticket resultSetToParkingSpot(String idOfParkingSpot, ResultSet parkingSpotFromDatabase)
-			throws SQLException {
-    	ParkingSpot parkingSpot = null;
-		if(parkingSpotFromDatabase.next()){
-			parkingSpot = new ParkingSpot();
-		    ParkingSpot parkingSpot = new ParkingSpot(parkingSpotFromDatabaseId.getInt(1), ParkingType.valueOf(parkingSpotFromDatabase.getString(6)));
-		    parkingSpot.setParkingNumber(parkingSpotFromDatabase.getInt(0));
-		    parkingSpot.setAvalailable(parkingSpotFromDatabase.getInt(1));
-		    parkingSpot.setType(parkingSpotFromDatabase.getInt(2));
-		}
-		return parkingSpot;
-	}*/
 }
