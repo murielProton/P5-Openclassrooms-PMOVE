@@ -6,10 +6,8 @@ import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
-import com.parkit.parkingsystem.util.DateHelperUtil;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
-import java.sql.Timestamp;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +18,6 @@ public class ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
 
-    private static FareCalculatorService fareCalculatorService = new FareCalculatorService();
 
     private ParkingSpotDAO parkingSpotDAO;
     private TicketDAO ticketDAO;
@@ -95,23 +92,22 @@ public class ParkingService {
         return parkingSpotDAO.getNumberOfAvailableSlotForType(parkingType) > 0;
     }
     public boolean isThereAlreadyThisVehicleInDB(String registrationNumber, ParkingType parkingType){
-        boolean result = ticketDAO.getTicketIfVehiculeAlreadyInside(registrationNumber, parkingType) > 0;
         return ticketDAO.getTicketIfVehiculeAlreadyInside(registrationNumber, parkingType) > 0;
     }
-    public void saveParkingSpot(ParkingSpot parkingSpot){
+    public void fillParkingSpot(ParkingSpot parkingSpot){
         try{
-            parkingSpot.setAvailable(false);
+        	parkingSpot.setAvailable(false);
             parkingSpotDAO.updateParking(parkingSpot);
         }catch(Exception e){
-            logger.error("Unable to process save Parking Spot",e);
+            logger.error("Unable to fill Parking Spot",e);
         }
     }
-    public void freeParkingSpot(ParkingSpot parkingSpot){
+    public void emptyParkingSpot(ParkingSpot parkingSpot){
         try{
             parkingSpot.setAvailable(true);
             parkingSpotDAO.updateParking(parkingSpot);
         }catch(Exception e){
-            logger.error("Unable to process save Parking Spot",e);
+            logger.error("Unable to empty Parking Spot",e);
         }
     }
     public void saveIncomingVehicleInDB(ParkingSpot parkingSpot, String vehicleRegNumber) {
@@ -144,11 +140,6 @@ public class ParkingService {
     		return null;
     	}
     }
-	/*public void updateTicketAndParkingSpotAfterPayement(Ticket ticket) {
-		ticket.setPrice(0);
-		ParkingSpot parkingSpot = new ParkingSpot();
-		freeParkingSpot(parkingSpot);
-	}*/
 	public static void updateOutTimeOfTicketForExitingVehicle(Ticket ticket, LocalDateTime outTime) {
 		ticket.setOutTime(outTime);
 		TicketDAO.updateOutTimeOfCurrentTicket(ticket);

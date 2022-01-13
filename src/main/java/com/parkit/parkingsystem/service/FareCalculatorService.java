@@ -31,7 +31,6 @@ public class FareCalculatorService {
             case BIKE: {
                 ticket.setPrice(hoursOfParkedTime * Fare.BIKE_RATE_PER_HOUR);
                 double bikeParkingFee = hoursOfParkedTime * Fare.CAR_RATE_PER_HOUR;
-                System.out.println("bike x number of hours the bike was parked -> "+bikeParkingFee);
                 return bikeParkingFee;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");

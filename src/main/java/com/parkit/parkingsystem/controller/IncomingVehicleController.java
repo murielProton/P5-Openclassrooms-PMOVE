@@ -19,7 +19,6 @@ public class IncomingVehicleController{
         this.parkingService = parkingService;
     }
     public void runSelectVehicleType(){
-        //TODO Faire la méthode associée.
         if(parkingService.isThereAParkingSpotForAnyType()){
             while(needStopVehicleType==false){
                 selectVehicleType();
@@ -84,10 +83,9 @@ public class IncomingVehicleController{
         try{
             LocalDateTime inTime = LocalDateTime.now();
             ParkingSpot parkingSpotWhereToGo = parkingService.getNextParkingNumberIfAvailable(currentType);
-            parkingService.saveParkingSpot(parkingSpotWhereToGo);
+            parkingService.fillParkingSpot(parkingSpotWhereToGo);
             parkingService.saveIncomingVehicleInDB(parkingSpotWhereToGo, vehicleRegNumber);
             successInSavingTicket(vehicleRegNumber, inTime, parkingSpotWhereToGo);
-            //TODO : REAL PB HERE
             AlphaController.loadInterface();
         }catch(Exception e){
             e.printStackTrace();
