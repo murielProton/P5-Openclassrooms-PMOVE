@@ -81,7 +81,7 @@ public class TicketDAO {
     }
     
     /**
-     * Used in Class : ParkingService by Method : getTicketOfExitingVehicleAndSetOutTime(String)
+     * Used in Class : PayementService by Method : getTicketOfExitingVehicleAndSetOutTime(String)
      * @param STRING vehicleRegNumber
      * @return Ticket
      */
@@ -128,30 +128,7 @@ public class TicketDAO {
 		}
 		return ticket;
 	}
-
-    /**
-     * Used in Class : ParkingService by Method : updateTicketAndParkingSpotAfterPayement(Ticket)
-     * @param Ticket
-     * @return boolean
-     */
-    public static boolean updateTicket(Ticket ticket) {
-        Connection updateTicketConnexion = null;
-        try {
-            updateTicketConnexion = dataBaseConfig.getConnection();
-            PreparedStatement querryUpdateTicket = updateTicketConnexion.prepareStatement(DBConstants.UPDATE_TICKET);
-            querryUpdateTicket.setDouble(1, ticket.getPrice());
-            querryUpdateTicket.setTimestamp(2, DateHelperUtil.convertLocalDateTimeToTimestamp(ticket.getOutTime()));
-            querryUpdateTicket.setInt(3,ticket.getId());
-            querryUpdateTicket.execute();
-            return true;
-        }catch (Exception ex){
-            logger.error("Error saving ticket info",ex);
-        }finally {
-            dataBaseConfig.closeConnection(updateTicketConnexion);
-        }
-        return false;
-    }
-    
+	
     /**
      * Used in Class : ParkingService by Method : isThereAlreadyThisVehicleInDB(String, ParkingType)
      * @param STRING vehicleRegNumber
