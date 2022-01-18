@@ -130,7 +130,6 @@ public class ParkingService {
                 ticket.setVehicleRegNumber(vehicleRegNumber);
                 ticket.setPrice(0);
                 ticket.setInTime(inTime);
-                //TODO : replace null by now LocalDateTime
                 ticket.setOutTime(null);
                 ticketDAO.saveTicket(ticket);
             }
