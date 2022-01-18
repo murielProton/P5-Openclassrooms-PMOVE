@@ -17,7 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-
+//OK to ALL le 18 01 2022 à 14h05
 public class FareCalculatorServiceTest {
 
     private static FareCalculatorService fareCalculatorService;
@@ -32,7 +32,11 @@ public class FareCalculatorServiceTest {
     private void setUpPerTest() {
         ticket = new Ticket();
     }
-
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method calculateFare(Ticket)
+     * run with success the 18 01 2022 at 13h58
+     */
     @Test
     public void calculateFareCar(){
         LocalDateTime inTime = LocalDateTime.now();
@@ -49,7 +53,11 @@ public class FareCalculatorServiceTest {
         assertEquals(expectedCarFarePerHour, Fare.CAR_RATE_PER_HOUR);
         assertEquals(2.25, ticket.getPrice());
     }
-
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method calculateFare(Ticket)
+     * run with success the 18 01 2022 at 14h00
+     */
     @Test
     public void calculateFareBike(){
         LocalDateTime inTime = LocalDateTime.now();
@@ -66,7 +74,11 @@ public class FareCalculatorServiceTest {
         assertEquals(expectedBikeFarePerHour, Fare.BIKE_RATE_PER_HOUR);
         assertEquals(1.5, ticket.getPrice());
     }
-
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method calculateFare(Ticket)
+     * run with success the 18 01 2022 at 14h01
+     */
     @Test
     public void findLengthOfTimeBetweenTwoLocalDateTimesTEST(){
         LocalDateTime inTime = LocalDateTime.now();
@@ -75,7 +87,11 @@ public class FareCalculatorServiceTest {
         Duration durationTypeLengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inTime, outTime);
         assertEquals(durationExpected, durationTypeLengthOfTimeDuringWhenCarWasParked);
     }
-
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method calculateFare(Ticket)
+     * run with success the 18 01 2022 at 14h02
+     */
     @Test
     public void transformDurationIntoDoubleTEST(){
         LocalDateTime inTime = LocalDateTime.now();
@@ -84,7 +100,11 @@ public class FareCalculatorServiceTest {
         double doubleTypehoursOfParkedTime = DateHelperUtil.transformDurationIntoDouble(durationTypeLengthOfTimeDuringWhenCarWasParked);
         assertEquals(0.5, doubleTypehoursOfParkedTime);
     }
-
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method calculateFare(Ticket)
+     * run with success the 18 01 2022 at 14h02
+     */
     @Test
     public void calculateFareUnkownType(){
         ParkingSpot parkingSpot = new ParkingSpot(1, null,false);
@@ -96,7 +116,11 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket));
     }
-
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method calculateFare(Ticket)
+     * run with success the 18 01 2022 at 14h03
+     */
     @Test
     public void calculateFareBikeWithFutureInTime(){
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
@@ -108,7 +132,11 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket));
     }
-
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method calculateFare(Ticket)
+     * run with success the 18 01 2022 at 14h03
+     */
     @Test
     public void calculateFareBikeWithLessThanOneHourParkingTime(){
         LocalDateTime inTime = LocalDateTime.now();
@@ -121,7 +149,11 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket);
         assertEquals((0.75 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice() );
     }
-
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method calculateFare(Ticket)
+     * run with success the 18 01 2022 at 14h04
+     */
     @Test
     public void calculateFareCarWithLessThanOneHourParkingTime(){
         LocalDateTime inTime = LocalDateTime.now();
@@ -134,7 +166,11 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket);
         assertEquals( (0.75 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
-
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method calculateFare(Ticket)
+     * run with success the 18 01 2022 at 14h04
+     */
     @Test
     public void calculateFareCarWithMoreThanADayParkingTime(){
         LocalDateTime inTime = LocalDateTime.now();
@@ -147,6 +183,25 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
         assertEquals( (24 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
+    }
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method getDurationOfTicket(Ticket)
+     * run with success the 18 01 2022 at 14h26
+     */
+    @Test
+    public void getDurationOfTicketTest() {
+    	ParkingSpot parkingSpotForTest = new ParkingSpot(1, ParkingType.CAR,false);
+    	ticket.setId(1);
+    	ticket.setInTime(LocalDateTime.now().minusMinutes(40));
+    	ticket.setOutTime(LocalDateTime.now());
+    	ticket.setParkingSpot(parkingSpotForTest);
+    	ticket.setVehicleRegNumber("123456789");
+    	//WHEN
+    	Duration realDuration = fareCalculatorService.getDurationOfTicket(ticket);
+    	//THEN
+    	Duration expectedDuration = Duration.ofMinutes(40);
+    	assertEquals( expectedDuration, realDuration);
     }
 
 }
