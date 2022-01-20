@@ -38,7 +38,7 @@ public class FareCalculatorServiceTest {
      * run with success the 18 01 2022 at 13h58
      */
     @Test
-    public void calculateFareCar(){
+    public void calculateFareCarTest(){
         LocalDateTime inTime = LocalDateTime.now();
         //LocalDateTime.now().plusMinutes(MUST HAVE A NUMBER ABOVE 30)
         LocalDateTime outTime =  LocalDateTime.now().plusMinutes(90);
@@ -59,7 +59,7 @@ public class FareCalculatorServiceTest {
      * run with success the 18 01 2022 at 14h00
      */
     @Test
-    public void calculateFareBike(){
+    public void calculateFareBikeTest(){
         LocalDateTime inTime = LocalDateTime.now();
         //LocalDateTime.now().plusMinutes(MUST HAVE A NUMBER ABOVE 30)
         LocalDateTime outTime =  LocalDateTime.now().plusMinutes(90);
@@ -80,7 +80,7 @@ public class FareCalculatorServiceTest {
      * run with success the 18 01 2022 at 14h01
      */
     @Test
-    public void findLengthOfTimeBetweenTwoLocalDateTimesTEST(){
+    public void findLengthOfTimeBetweenTwoLocalDateTimesTest(){
         LocalDateTime inTime = LocalDateTime.now();
         LocalDateTime outTime =  LocalDateTime.now().plusMinutes(30);
         Duration durationExpected = Duration.between(inTime, outTime);
@@ -93,7 +93,7 @@ public class FareCalculatorServiceTest {
      * run with success the 18 01 2022 at 14h02
      */
     @Test
-    public void transformDurationIntoDoubleTEST(){
+    public void transformDurationIntoDoubleTest(){
         LocalDateTime inTime = LocalDateTime.now();
         LocalDateTime outTime =  LocalDateTime.now().plusMinutes(30);
         Duration durationTypeLengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inTime, outTime);
@@ -106,7 +106,7 @@ public class FareCalculatorServiceTest {
      * run with success the 18 01 2022 at 14h02
      */
     @Test
-    public void calculateFareUnkownType(){
+    public void calculateFareUnkownTypeTest(){
         ParkingSpot parkingSpot = new ParkingSpot(1, null,false);
         LocalDateTime inTime = LocalDateTime.now();
         //LocalDateTime.now().plusMinutes(MUST HAVE A NUMBER ABOVE 30)
@@ -122,7 +122,7 @@ public class FareCalculatorServiceTest {
      * run with success the 18 01 2022 at 14h03
      */
     @Test
-    public void calculateFareBikeWithFutureInTime(){
+    public void calculateFareBikeWithFutureInTimeTest(){
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
         LocalDateTime inTime = LocalDateTime.now();
         //Carefull this is a start date after end date
@@ -138,7 +138,7 @@ public class FareCalculatorServiceTest {
      * run with success the 18 01 2022 at 14h03
      */
     @Test
-    public void calculateFareBikeWithLessThanOneHourParkingTime(){
+    public void calculateFareBikeWithLessThanOneHourParkingTimeTest(){
         LocalDateTime inTime = LocalDateTime.now();
         //LocalDateTime.now().plusMinutes(MUST HAVE A NUMBER ABOVE 30 and less than 60)
         LocalDateTime outTime =  LocalDateTime.now().plusMinutes(45);
@@ -155,7 +155,7 @@ public class FareCalculatorServiceTest {
      * run with success the 18 01 2022 at 14h04
      */
     @Test
-    public void calculateFareCarWithLessThanOneHourParkingTime(){
+    public void calculateFareCarWithLessThanOneHourParkingTimeTest(){
         LocalDateTime inTime = LocalDateTime.now();
         //LocalDateTime.now().plusMinutes(MUST HAVE A NUMBER ABOVE 30 and less than 60)
         LocalDateTime outTime =  LocalDateTime.now().plusMinutes(45);
@@ -172,7 +172,7 @@ public class FareCalculatorServiceTest {
      * run with success the 18 01 2022 at 14h04
      */
     @Test
-    public void calculateFareCarWithMoreThanADayParkingTime(){
+    public void calculateFareCarWithMoreThanADayParkingTimeTest(){
         LocalDateTime inTime = LocalDateTime.now();
         //LocalDateTime.now().plusHours(MUST HAVE 24)
         LocalDateTime outTime =  LocalDateTime.now().plusHours(24);
