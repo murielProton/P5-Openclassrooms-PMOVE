@@ -22,7 +22,16 @@ public class AlphaController {
     private IncomingVehicleController incomingVehicleController = new IncomingVehicleController(parkingService);
     private ExitingVehicleController exitingVehicleController = new ExitingVehicleController(parkingService);
     
-    
+    /**
+     * Enables unit testing
+     * CONSTRUCTOR
+     * Used in Class AlphaController by Method : processSelectAction(INTEGER)
+     * @param BOOLEAN
+     * @return VOID
+     */
+    public void setWorking(boolean value) {
+    	this.working = value;
+    }
 
     /**
      * calls on next method run
@@ -84,10 +93,11 @@ public class AlphaController {
             }
             case 3: {
                 System.out.println("Exiting from the system!");
-                working = false;
+                setWorking(false);
                 break;
             }
             default: System.out.println("Unsupported option. Please enter a number corresponding to the provided menu");
         }
     }
+
 }

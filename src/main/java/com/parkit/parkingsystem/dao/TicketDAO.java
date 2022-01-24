@@ -23,8 +23,7 @@ import java.sql.SQLException;
 public class TicketDAO {
 
     private static final Logger logger = LogManager.getLogger("TicketDAO");
-
-    public static DataBaseConfig dataBaseConfig = new DataBaseConfig();
+    public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
     /**
      * Used in Class : ParkingService by Method : saveIncomingVehicleInDB(ParkingSpot, String)

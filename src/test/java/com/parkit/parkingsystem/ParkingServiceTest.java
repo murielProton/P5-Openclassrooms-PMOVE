@@ -16,13 +16,30 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
 import java.util.Date;
+
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.*;
 
 
+/**
+ * @author Muriel Proton
+ *
+ */
 @ExtendWith(MockitoExtension.class)
 public class ParkingServiceTest {
 
@@ -34,6 +51,8 @@ public class ParkingServiceTest {
     private static TicketDAO ticketDAO;
     @Mock
     private static ParkingSpotDAO parkingSpotDAO;
+    @Mock
+    private static ParkingType parkingType;
 
 
 
@@ -42,47 +61,22 @@ public class ParkingServiceTest {
             parkingService = new ParkingService(parkingSpotDAO, ticketDAO);
     }
 
+    /**
+     * This is a unit test
+     * There for we will only test if the right method is called upon, not if it returns the right value.
+     * @author Muriel Proton
+     */
     @Test
-    public void processExitingVehicleTest() throws Exception{
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
-        Ticket ticket = new Ticket();
-        Date today = new Date(System.currentTimeMillis() - (60*60*1000));
-        ticket.setInTime(DateHelperUtil.convertDateToLocalDateTime(today));
-        ticket.setParkingSpot(parkingSpot);
-        ticket.setVehicleRegNumber("ABCDEF");
-        when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
-        when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
-        when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
-        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        parkingService.processExitingVehicle();
-        verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
-    }
-
-    @Test
-    public void processExitingVehicleTest_whenUpdateTicketRuturnFalse() throws Exception{
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
-        Ticket ticket = new Ticket();
-        Date today = new Date(System.currentTimeMillis() - (60*60*1000));
-        ticket.setInTime(DateHelperUtil.convertDateToLocalDateTime(today));
-        ticket.setParkingSpot(parkingSpot);
-        ticket.setVehicleRegNumber("ABCDEF");
-        when(ticketDAO.getTicket(any())).thenReturn(ticket);
-        when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
-        parkingService.processExitingVehicle();
-        verify(parkingSpotDAO, Mockito.times(0)).updateParking(any(ParkingSpot.class));
-    }
-    @Test
-    public void processExitingVehicleTest_WhenErrorThrow() throws Exception{
-        RuntimeException myException = new RuntimeException("test");
-        when(ticketDAO.getTicket(any())).thenThrow(myException);
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            parkingService.processExitingVehicle();
-        });
-        
-        assertEquals("Unable to process exiting vehicle", exception.getMessage());
-        assertEquals(myException, exception.getCause());
-    }
-
+    public void getNextParkingNumberIfAvailableForCarTest() {
+    	ParkingService mokedParkingService = mock(ParkingService.class);
+    	ParkingSpotDAO mokedParkingSpotDAO = mock(ParkingSpotDAO.class);
+    	//WHEN
+    	mokedParkingService.getNextParkingNumberIfAvailable(parkingType.CAR);
+    	//THEN -> verify that parkingSpotDAO.getNextAvailableSlot(parkingType); was called upon
+    	verify(mokedParkingService, atLeast(1)).mokedParkingSpotDAO.getNextAvailableSlot(parkingType.CAR);
+    	((mokedParkingService) Mockito.verify(mokedParkingService)).getNextAvailableSlot(parkingType.CAR);
+    	
+    }/*
     @Test
     public void getVehichleTypeCarTest(){
         // If I press 1 doese the methode returns ParkingType CAR
@@ -98,5 +92,5 @@ public class ParkingServiceTest {
     public void getVehichleTypeUnknownTest(){
         // If I press 1 doese the methode returns ParkingType CAR
         assertEquals(null, parkingService.getVehichleType(3));
-    }
+    }*/
 }

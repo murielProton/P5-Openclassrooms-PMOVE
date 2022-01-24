@@ -21,18 +21,20 @@ public class ExitingVehicleController {
 	private static final Logger logger = LogManager.getLogger("ExitingVehicleController");
 
 	/**
-	 * CONSTRUCTOR method
-     * Used in Class  AlphaController 
-     * @param ParkingService
+	 * CONSTRUCTOR method Used in Class AlphaController
+	 * 
+	 * @param ParkingService
 	 */
 	public ExitingVehicleController(ParkingService parkingService) {
 		this.parkingService = parkingService;
 	}
 
 	/*
-	 * gets the registration number of vehicle
-	 * Used in Class processExitingVehicle by Method : processExitingVehicle
+	 * gets the registration number of vehicle Used in Class processExitingVehicle
+	 * by Method : processExitingVehicle
+	 * 
 	 * @param NONE
+	 * 
 	 * @return STRING
 	 **/
 	public String getRegistrationNumber() {
@@ -46,8 +48,9 @@ public class ExitingVehicleController {
 	}
 
 	/**
-	 * gets price of the ticket
-	 * Used in Class processExitingVehicle by Method : processExitingVehicle 
+	 * gets price of the ticket Used in Class processExitingVehicle by Method :
+	 * processExitingVehicle
+	 * 
 	 * @param STRING vehicleRegNumber
 	 * @return Ticket
 	 */
@@ -59,10 +62,11 @@ public class ExitingVehicleController {
 			String timeOfDeparture = currentTicket.getOutTime().format(formatter);
 			String timeOfArrival = currentTicket.getInTime().format(formatter);
 			String dayOfArrival = currentTicket.getInTime().format(dayFormatter);
-			
+
 			System.out.println("ExitingVehicleController Recorded out-time for your vehicle, registration number "
-					+ currentTicket.getVehicleRegNumber() + ", is : " + timeOfDeparture+".");
-			System.out.println("You have entered our facilities on the : "+dayOfArrival+ ", at : "+ timeOfArrival+".");
+					+ currentTicket.getVehicleRegNumber() + ", is : " + timeOfDeparture + ".");
+			System.out.println(
+					"You have entered our facilities on the : " + dayOfArrival + ", at : " + timeOfArrival + ".");
 			return currentTicket;
 		} catch (Exception e) {
 			logger.error("Unable to process exiting vehicle and set out time.", e);
@@ -71,8 +75,9 @@ public class ExitingVehicleController {
 	}
 
 	/**
-	 * gets price of the ticket
-	 * Used in Class processExitingVehicle by Method : processExitingVehicle 
+	 * gets price of the ticket Used in Class processExitingVehicle by Method :
+	 * processExitingVehicle
+	 * 
 	 * @param Ticket ticket
 	 * @return DOUBLE
 	 */
@@ -89,8 +94,9 @@ public class ExitingVehicleController {
 	}
 
 	/**
-	 * upadates ticket and parking spot's avalability
-	 * Used in Class processExitingVehicle by Method : processExitingVehicle 
+	 * upadates ticket and parking spot's avalability Used in Class
+	 * processExitingVehicle by Method : processExitingVehicle
+	 * 
 	 * @param DOUBLE price
 	 * @return BOOLEAN
 	 */
@@ -108,7 +114,8 @@ public class ExitingVehicleController {
 
 	/**
 	 * This method has 2 actions 1 updates parking spot and ticket 2 opens the gate
-	 * Used in Class processExitingVehicle by Method : processExitingVehicle 
+	 * Used in Class processExitingVehicle by Method : processExitingVehicle
+	 * 
 	 * @param BOOLEAN payementValidated, Ticket
 	 * @return VOID
 	 */
@@ -126,8 +133,9 @@ public class ExitingVehicleController {
 	}
 
 	/**
-	 * runs all the methods of this class
-	 * Used in Class AlphaController by Method : processSelectAction(integer)
+	 * runs all the methods of this class Used in Class AlphaController by Method :
+	 * processSelectAction(integer)
+	 * 
 	 * @param NONE
 	 * @return VOID
 	 */
@@ -137,13 +145,16 @@ public class ExitingVehicleController {
 		Double priceForThisTicket = getExitingVehiculePriceFare(thisTicket);
 		boolean payementValidated = payementTerminal(priceForThisTicket);
 		ParkingSpot parkingSpotToVacate = thisTicket.getParkingSpot();
-		if(payementValidated) {
+		if (payementValidated) {
 			ParkingService.updatePriceOfCurrentTicket(thisTicket, priceForThisTicket);
 			System.out.println("Update of ticket is a success.");
 			openGateForExitingVehicle(payementValidated, thisTicket);
-			//TODO Verify that the vehicle realy left the facilities
-			parkingService.emptyParkingSpot(parkingSpotToVacate);
-			}
-		
+			// TODO Verify that the vehicle really left the facilities
+			getParkingService().emptyParkingSpot(parkingSpotToVacate);
+		}
+	}
+	
+	public ParkingService getParkingService() {
+		return parkingService;
 	}
 }
