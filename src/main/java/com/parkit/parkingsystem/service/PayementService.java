@@ -17,7 +17,8 @@ public class PayementService {
      * @return Ticket
      */
     public static Ticket getTicketOfExitingVehicleAndSetOutTime(String vehiculRegNumber){
-        Ticket ticketOfExitingVehicle = TicketDAO.getTicketOfExitingVehicul(vehiculRegNumber);
+    	TicketDAO ticketDAO= new TicketDAO();
+        Ticket ticketOfExitingVehicle = ticketDAO.getTicketOfExitingVehicul(vehiculRegNumber);
         LocalDateTime outTime = LocalDateTime.now();
         ParkingService.updateOutTimeOfTicketForExitingVehicle(ticketOfExitingVehicle, outTime);
         return ticketOfExitingVehicle;

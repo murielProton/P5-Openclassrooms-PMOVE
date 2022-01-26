@@ -23,8 +23,7 @@ import java.sql.SQLException;
 public class TicketDAO {
 
     private static final Logger logger = LogManager.getLogger("TicketDAO");
-
-    public static DataBaseConfig dataBaseConfig = new DataBaseConfig();
+    public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
     /**
      * Used in Class : ParkingService by Method : saveIncomingVehicleInDB(ParkingSpot, String)
@@ -59,7 +58,7 @@ public class TicketDAO {
      * @param STRING vehicleRegNumber
      * @return Ticket
      */
-    public static Ticket getTicket(String vehicleRegNumber) {
+    public Ticket getTicket(String vehicleRegNumber) {
         Connection getTicketConnection = null;
         Ticket ticket = null;
         try {
@@ -85,7 +84,7 @@ public class TicketDAO {
      * @param STRING vehicleRegNumber
      * @return Ticket
      */
-    public static Ticket getTicketOfExitingVehicul(String vehicleRegNumber) {
+    public Ticket getTicketOfExitingVehicul(String vehicleRegNumber) {
         Connection getTicketConnection = null;
         Ticket ticket = null;
         try {
@@ -167,7 +166,7 @@ public class TicketDAO {
      * @param Ticket
      * @return boolean
      */
-    public static boolean updateOutTimeOfCurrentTicket(Ticket ticket) {
+    public boolean updateOutTimeOfCurrentTicket(Ticket ticket) {
         Connection updateTicketConnexion = null;
         try {
             updateTicketConnexion = dataBaseConfig.getConnection();
@@ -189,7 +188,7 @@ public class TicketDAO {
      * @param DOUBLE price
      * @return boolean
      */
-    public static boolean updatePriceOfCurrentTicket(Ticket ticket, Double price) {
+    public boolean updatePriceOfCurrentTicket(Ticket ticket, Double price) {
         Connection updateTicketConnexion = null;
         try {
             updateTicketConnexion = dataBaseConfig.getConnection();

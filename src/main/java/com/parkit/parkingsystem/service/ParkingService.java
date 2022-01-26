@@ -146,7 +146,8 @@ public class ParkingService {
 	 */
 	public static void updateOutTimeOfTicketForExitingVehicle(Ticket ticket, LocalDateTime outTime) {
 		ticket.setOutTime(outTime);
-		TicketDAO.updateOutTimeOfCurrentTicket(ticket);
+		TicketDAO ticketDAO= new TicketDAO();
+		ticketDAO.updateOutTimeOfCurrentTicket(ticket);
 		
 	}
 	/**
@@ -157,7 +158,8 @@ public class ParkingService {
 	 */
 	public static void updatePriceOfCurrentTicket(Ticket ticket, Double price) {
 		ticket.setPrice(price);
-		TicketDAO.updatePriceOfCurrentTicket(ticket, price);
+		TicketDAO ticketDAO= new TicketDAO();
+		ticketDAO.updatePriceOfCurrentTicket(ticket, price);
 		
 	}
 }
