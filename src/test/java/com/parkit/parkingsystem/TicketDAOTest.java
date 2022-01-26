@@ -41,7 +41,7 @@ public class TicketDAOTest {
         ticketToSave.setPrice(0);
         ticketToSave.setInTime(inTime);
         ticketToSave.setOutTime(null);
-    	/*when(mockOfTicketDAO.getTicket(anyString())).thenReturn(ticketToSave);*/
+    	//when(mockOfTicketDAO.getTicket(anyString())).thenReturn(ticketToSave);
     	boolean wasTheTicketRealySaved = ticketDAO.saveTicket(ticketToSave);
     	assertEquals(true, wasTheTicketRealySaved);
     }

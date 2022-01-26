@@ -43,7 +43,7 @@ public class TicketDAO {
             querrySaveTicket.setDouble(3, ticket.getPrice());
             querrySaveTicket.setTimestamp(4, DateHelperUtil.convertLocalDateTimeToTimestamp(ticket.getInTime()));
             querrySaveTicket.setTimestamp(5, null);
-            return querrySaveTicket.execute();
+            return querrySaveTicket.executeUpdate()==1;
         }catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
         }finally {
