@@ -55,8 +55,14 @@ public class ParkingDataBaseIT {
 
     }*/
     /**
+     * @author Muriel Proton
      * in the new architecture parkingService.processIncomingVehicle(); has become 
      * IncomingVehicleController.runRegistrationNumberController(ParkingType currentType)
+     * Integration test Test running through classes :
+     * + ParkingService
+     * + IncomingVehicleController
+     * + RegistrationNumberController
+     * run with success the 27 01 2022 at 17h438
     */
     @Test
     public void testParkingACar(){
