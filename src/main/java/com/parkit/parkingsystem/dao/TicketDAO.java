@@ -112,7 +112,7 @@ public class TicketDAO {
 	 * @return Ticket
 	 * @throws SQLException
 	 */
-	private static Ticket resultSetToTicket(String vehicleRegNumber, ResultSet ticketFromDatabase)
+	public static Ticket resultSetToTicket(String vehicleRegNumber, ResultSet ticketFromDatabase)
 			throws SQLException {
 		Ticket ticket = null;
 		if(ticketFromDatabase.next()){
