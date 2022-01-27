@@ -34,7 +34,7 @@ public class IncomingVehicleController{
      */
     public void runSelectVehicleType(){
         if(parkingService.isThereAParkingSpotForAnyType()){
-            while(needStopVehicleType==false){
+            while(isNeedStopVehicleType()==false){
                 selectVehicleType();
             }
         }else{
@@ -78,7 +78,7 @@ public class IncomingVehicleController{
                 }
                 default: {
                     System.out.println("Incorrect type provided.");
-                    needStopVehicleType = true;
+                    setNeedStopVehicleType(true);
                     break;
                 }
             }
@@ -89,9 +89,9 @@ public class IncomingVehicleController{
      * @param ParkingType
      * @return VOID
      */
-    private void runRegistrationNumberController(ParkingType currentType) {
+    public void runRegistrationNumberController(ParkingType currentType) {
         if(parkingService.isThereAParkingSpotForType(currentType)){
-            while(needStopVehicleType==false){
+            while(isNeedStopVehicleType()==false){
                 try {
                     String vehicleRegNumber = RegistrationNumberController.inputRegistrationNumber();
                     if(RegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber) &&
@@ -122,7 +122,6 @@ public class IncomingVehicleController{
             parkingService.fillParkingSpot(parkingSpotWhereToGo);
             parkingService.saveIncomingVehicleInDB(parkingSpotWhereToGo, vehicleRegNumber);
             successInSavingTicket(vehicleRegNumber, inTime, parkingSpotWhereToGo);
-            AlphaController.loadInterface();
         }catch(Exception e){
             e.printStackTrace();
             System.out.println("Unable to process incoming vehicle");
@@ -142,4 +141,12 @@ public class IncomingVehicleController{
         System.out.println("Please park your vehicle in spot number : "+parkingSpot.getId());
         System.out.println("The gate opens !");
     }
+
+	public boolean isNeedStopVehicleType() {
+		return needStopVehicleType;
+	}
+
+	public void setNeedStopVehicleType(boolean needStopVehicleType) {
+		this.needStopVehicleType = needStopVehicleType;
+	}
 }
