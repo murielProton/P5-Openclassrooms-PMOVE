@@ -4,11 +4,7 @@ package com.parkit.parkingsystem;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertThrows;
-//import static org.mockito.Mockito.*;
-//import org.mockito.Mock;
 
-//import com.parkit.parkingsystem.config.DataBaseConfig;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.model.ParkingSpot;
@@ -18,31 +14,27 @@ public class ParkingSpotDAOTest {
 	private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
 	private static ParkingSpotDAO parkingSpotDAO= new ParkingSpotDAO();
 	private static DataBasePrepareService dataBasePrepareService = new DataBasePrepareService();
-	 //private static ParkingSpotDAO parkingSpotDAO;
-	 //private static TicketDAO ticketDAO;
-	 //private static DataBasePrepareService dataBasePrepareService;
-
-	//@Mock
-    //private static ParkingType parkingType;
-
-    //@BeforeAll
-    /*private static void setUp() throws Exception {
-    	
-    }*/
 
     @BeforeEach
     private void setUpPerTest() throws Exception {
-        /*when(inputReaderUtil.readSelection()).thenReturn(1);
-        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn(LICENSE_PLATE);
-        dataBasePrepareService.clearDataBaseEntries();*/
     	dataBasePrepareService.clearDataBaseEntries();
     	parkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
     }
+    /**
+	 * @author Muriel Proton
+	 * Test in class ParkingSpotDAO method getNextAvailableSlot(ParkingType)
+	 * run with success the 27 01 2022 at 15h14
+	 */
     @Test
     public void getNextAvailableSlotTest() {
     	int realParkingSpotNumber = parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR);
     	assertEquals(1, realParkingSpotNumber);
     }
+    /**
+	 * @author Muriel Proton
+	 * Test in class ParkingSpotDAO method updateParking(ParkingSpot)
+	 * run with success the 27 01 2022 at 15h14
+	 */
     @Test
     public void updateParkingTest() {
     	ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
@@ -50,11 +42,21 @@ public class ParkingSpotDAOTest {
     	boolean realParkingSpot = parkingSpotDAO.updateParking(parkingSpot);
     	assertEquals(true, realParkingSpot);
     }
+    /**
+	 * @author Muriel Proton
+	 * Test in class ParkingSpotDAO method getTotalNumberOfAvailableSlot()
+	 * run with success the 27 01 2022 at 15h14
+	 */
     @Test
     public void getTotalNumberOfAvailableSlotTest() {
     	int realNumberOfAvailableParkingSpot = parkingSpotDAO.getTotalNumberOfAvailableSlot();
     	assertEquals(5, realNumberOfAvailableParkingSpot);
     }
+    /**
+	 * @author Muriel Proton
+	 * Test in class ParkingSpotDAO method getNumberOfAvailableSlotForType(ParkingType)
+	 * run with success the 27 01 2022 at 15h14
+	 */
     @Test
     public void getNumberOfAvailableSlotForTypeTest() {
     	int realNumberOfAvailableParkingSpot = parkingSpotDAO.getNumberOfAvailableSlotForType(ParkingType.CAR);
