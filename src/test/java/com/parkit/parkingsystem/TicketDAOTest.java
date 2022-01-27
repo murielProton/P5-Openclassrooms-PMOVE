@@ -9,6 +9,8 @@ import com.parkit.parkingsystem.dao.TicketDAO;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.mockito.Mock;
+
 
 import java.time.LocalDateTime;
 
@@ -17,12 +19,21 @@ public class TicketDAOTest {
 	private static TicketDAO ticketDAO= new TicketDAO();
 	private static DataBasePrepareService dataBasePrepareService = new DataBasePrepareService();
 	
-	/*@Mock
-	private static TicketDAO mockOfTicketDAO= new TicketDAO();*/
+	@Mock
+	private static Ticket ticketToSave = new Ticket();
+	@Mock
+	private static ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
+	@Mock
+	private static LocalDateTime inTime = LocalDateTime.now();
 	@BeforeEach
     private void setUpPerTest() throws Exception {
     	dataBasePrepareService.clearDataBaseEntries();
     	ticketDAO.dataBaseConfig = dataBaseTestConfig;
+    	ticketToSave.setParkingSpot(parkingSpot);
+        ticketToSave.setVehicleRegNumber("123456789");
+        ticketToSave.setPrice(0);
+        ticketToSave.setInTime(inTime);
+        ticketToSave.setOutTime(null);
     }
 	/**
 	 * @author Muriel Proton
@@ -31,14 +42,6 @@ public class TicketDAOTest {
 	 */
     @Test
     public void saveTicketTest() {
-    	LocalDateTime inTime = LocalDateTime.now();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
-        Ticket ticketToSave = new Ticket();
-        ticketToSave.setParkingSpot(parkingSpot);
-        ticketToSave.setVehicleRegNumber("123456789");
-        ticketToSave.setPrice(0);
-        ticketToSave.setInTime(inTime);
-        ticketToSave.setOutTime(null);
     	boolean wasTheTicketRealySaved = ticketDAO.saveTicket(ticketToSave);
     	assertEquals(true, wasTheTicketRealySaved);
     }
@@ -49,16 +52,8 @@ public class TicketDAOTest {
 	 */
     @Test
     public void getTicketTest() { 
-    	Ticket ticketToSave = new Ticket();
     	Ticket realTicket = new Ticket();
-    	LocalDateTime inTime = LocalDateTime.now();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
-        ticketToSave.setParkingSpot(parkingSpot);
-        ticketToSave.setVehicleRegNumber("123456789");
-        ticketToSave.setPrice(0);
-        ticketToSave.setInTime(inTime);
-        ticketToSave.setOutTime(null);
-        ticketDAO.saveTicket(ticketToSave);
+    	ticketDAO.saveTicket(ticketToSave);
         realTicket = ticketDAO.getTicket("123456789");
         assertEquals(parkingSpot, realTicket.getParkingSpot());
     	assertEquals("123456789", realTicket.getVehicleRegNumber());
@@ -72,17 +67,9 @@ public class TicketDAOTest {
 	 */
     @Test
     public void getTicketOfExitingVehiculTest() { 
-    	Ticket ticketToSave = new Ticket();
     	Ticket ticketToSave1 = new Ticket();
     	Ticket realTicket = new Ticket();
-    	LocalDateTime inTime = LocalDateTime.now();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
         ParkingSpot parkingSpot1 = new ParkingSpot(2, ParkingType.CAR, true);
-        ticketToSave.setParkingSpot(parkingSpot);
-        ticketToSave.setVehicleRegNumber("123456789");
-        ticketToSave.setPrice(0);
-        ticketToSave.setInTime(inTime);
-        ticketToSave.setOutTime(null);
         ticketToSave1.setParkingSpot(parkingSpot1);
         ticketToSave1.setVehicleRegNumber("987456321");
         ticketToSave1.setPrice(0);
@@ -102,14 +89,6 @@ public class TicketDAOTest {
 	 */
     @Test
     public void getTicketIfVehiculeAlreadyInsideTest(){
-    	LocalDateTime inTime = LocalDateTime.now();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
-        Ticket ticketToSave = new Ticket();
-        ticketToSave.setParkingSpot(parkingSpot);
-        ticketToSave.setVehicleRegNumber("123456789");
-        ticketToSave.setPrice(0);
-        ticketToSave.setInTime(inTime);
-        ticketToSave.setOutTime(null);
         ticketDAO.saveTicket(ticketToSave);
     	int oneTicketInDB = ticketDAO.getTicketIfVehiculeAlreadyInside("123456789", ParkingType.CAR);
     	int zeroTicketInDB = ticketDAO.getTicketIfVehiculeAlreadyInside("987654321", ParkingType.BIKE);
@@ -124,15 +103,7 @@ public class TicketDAOTest {
 	 */
     @Test
     public void updateOutTimeOfCurrentTicketTest() {
-    	LocalDateTime inTime = LocalDateTime.now();
     	LocalDateTime outTime = inTime.plusMinutes(40);
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
-        Ticket ticketToSave = new Ticket();
-        ticketToSave.setParkingSpot(parkingSpot);
-        ticketToSave.setVehicleRegNumber("123456789");
-        ticketToSave.setPrice(0);
-        ticketToSave.setInTime(inTime);
-        ticketToSave.setOutTime(null);
         ticketDAO.saveTicket(ticketToSave);
         ticketToSave.setOutTime(outTime);
     	boolean wasTheTicketRealyUpdated = ticketDAO.updateOutTimeOfCurrentTicket(ticketToSave);
@@ -145,14 +116,7 @@ public class TicketDAOTest {
 	 */
     @Test
     public void updatePriceOfCurrentTicketTest() {
-    	LocalDateTime inTime = LocalDateTime.now();
     	LocalDateTime outTime = inTime.plusMinutes(40);
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
-        Ticket ticketToSave = new Ticket();
-        ticketToSave.setParkingSpot(parkingSpot);
-        ticketToSave.setVehicleRegNumber("123456789");
-        ticketToSave.setPrice(0);
-        ticketToSave.setInTime(inTime);
         ticketToSave.setOutTime(outTime);
         ticketDAO.saveTicket(ticketToSave);
     	Double price = 10.4;
