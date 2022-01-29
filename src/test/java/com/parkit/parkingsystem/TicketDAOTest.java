@@ -5,6 +5,7 @@ import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 
 import org.junit.jupiter.api.*;
@@ -25,10 +26,12 @@ public class TicketDAOTest {
 	private static ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
 	@Mock
 	private static LocalDateTime inTime = LocalDateTime.now();
+	
 	@BeforeEach
     private void setUpPerTest() throws Exception {
+    	ParkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
+		TicketDAO.dataBaseConfig = dataBaseTestConfig;
     	dataBasePrepareService.clearDataBaseEntries();
-    	ticketDAO.dataBaseConfig = dataBaseTestConfig;
     	ticketToSave.setParkingSpot(parkingSpot);
         ticketToSave.setVehicleRegNumber("123456789");
         ticketToSave.setPrice(0);

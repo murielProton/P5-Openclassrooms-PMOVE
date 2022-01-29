@@ -9,16 +9,18 @@ import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.TicketDAO;
 
 public class ParkingSpotDAOTest {
 	private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
-	private static ParkingSpotDAO parkingSpotDAO= new ParkingSpotDAO();
+	private static ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAO();
 	private static DataBasePrepareService dataBasePrepareService = new DataBasePrepareService();
 
     @BeforeEach
     private void setUpPerTest() throws Exception {
+    	ParkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
+		TicketDAO.dataBaseConfig = dataBaseTestConfig;
     	dataBasePrepareService.clearDataBaseEntries();
-    	parkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
     }
     /**
 	 * @author Muriel Proton
