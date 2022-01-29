@@ -18,7 +18,7 @@ public class FareCalculatorService {
      * @return DURATION
      */
     public Duration getDurationOfTicket(Ticket ticket){
-        if( (ticket.getOutTime() == null) || (ticket.getOutTime().isBefore(ticket.getInTime())) ){
+        if( ticket.getOutTime() == null || ticket.getInTime().isAfter(ticket.getOutTime()) ){
             throw new IllegalArgumentException("Out time provided is incorrect: "+ticket.getOutTime());
         }
 
