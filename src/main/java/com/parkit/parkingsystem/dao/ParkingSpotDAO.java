@@ -18,7 +18,7 @@ import java.sql.ResultSet;
  */
 public class ParkingSpotDAO {
     private static final Logger logger = LogManager.getLogger("ParkingSpotDAO");
-    public DataBaseConfig dataBaseConfig = new DataBaseConfig();
+    public static DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
     /**
      * Used in Class ParkingService by Method : getNextParkingNumberIfAvailable(ParkingType)
