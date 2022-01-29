@@ -1,7 +1,6 @@
 package com.parkit.parkingsystem.integration;
 
 import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.controller.AlphaController;
 import com.parkit.parkingsystem.controller.IncomingVehicleController;
 import com.parkit.parkingsystem.controller.RegistrationNumberController;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
@@ -13,6 +12,7 @@ import com.parkit.parkingsystem.util.InputReaderUtil;
 
 import junit.framework.Assert;
 
+import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.AfterAll;
 //import org.junit.jupiter.api.BeforeAll;
 //import org.junit.jupiter.api.BeforeEach;
@@ -26,73 +26,59 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
 
-    private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
-    private static ParkingSpotDAO parkingSpotDAO;
-    private static TicketDAO ticketDAO;
-    private static DataBasePrepareService dataBasePrepareService;
+	private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
+	private static DataBasePrepareService dataBasePrepareService = new DataBasePrepareService();
 
-    @Mock
-    private static InputReaderUtil inputReaderUtil;
+	@Mock
+	private static InputReaderUtil inputReaderUtil;
 
-   /* @BeforeAll
-    private static void setUp() throws Exception{
-        parkingSpotDAO = new ParkingSpotDAO();
-        parkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
-        ticketDAO = new TicketDAO();
-        ticketDAO.dataBaseConfig = dataBaseTestConfig;
-        dataBasePrepareService = new DataBasePrepareService();
-    }
-
-    @BeforeEach
+	@BeforeEach
     private void setUpPerTest() throws Exception {
-        when(InputReaderUtil.readInt()).thenReturn(2);
-        when(InputReaderUtil.readNextLine()).thenReturn("123456789");
-        dataBasePrepareService.clearDataBaseEntries();
-    }
+		ParkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
+		TicketDAO.dataBaseConfig = dataBaseTestConfig;
+    	dataBasePrepareService.clearDataBaseEntries();
+	}
+	/**
+	 * @author Muriel Proton in the new architecture
+	 *         parkingService.processIncomingVehicle(); has become
+	 *         IncomingVehicleController.runRegistrationNumberController(ParkingType
+	 *         currentType) Integration test Test running through classes : +
+	 *         ParkingService + IncomingVehicleController +
+	 *         RegistrationNumberController run with success the 27 01 2022 at
+	 *         17h438
+	 */
+	@Test
+	public void testParkingABike() {
+		// Given
+		dataBasePrepareService = new DataBasePrepareService();
+		ParkingService parkingService = new ParkingService(new ParkingSpotDAO(), new TicketDAO());
+		try (MockedStatic<RegistrationNumberController> regNumberController = Mockito
+				.mockStatic(RegistrationNumberController.class)) {
+			try (MockedStatic<InputReaderUtil> inputReaderUtil = Mockito
+					.mockStatic(InputReaderUtil.class)) {
+				//Préparation select Bike
+				inputReaderUtil.when(InputReaderUtil::readInt).thenReturn(2);
+				String vehicleRegNumber = "147852369";
+				regNumberController.when(RegistrationNumberController::inputRegistrationNumber)
+						.thenReturn(vehicleRegNumber);
+				IncomingVehicleController incomingVehicleController = new IncomingVehicleController(parkingService);
+				// When
+				incomingVehicleController.selectVehicleType();
+				// Then
+				Assert.assertTrue(parkingService.isThereAlreadyThisVehicleInDB(vehicleRegNumber, ParkingType.BIKE));
+			}
+		}
+	}
 
-    @AfterAll
-    private static void tearDown(){
-
-    }*/
-    /**
-     * @author Muriel Proton
-     * in the new architecture parkingService.processIncomingVehicle(); has become 
-     * IncomingVehicleController.runRegistrationNumberController(ParkingType currentType)
-     * Integration test Test running through classes :
-     * + ParkingService
-     * + IncomingVehicleController
-     * + RegistrationNumberController
-     * run with success the 27 01 2022 at 17h438
-    */
-    @Test
-    public void testParkingACar(){
-    	parkingSpotDAO = new ParkingSpotDAO();
-        parkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
-        ticketDAO = new TicketDAO();
-        ticketDAO.dataBaseConfig = dataBaseTestConfig;
-        dataBasePrepareService = new DataBasePrepareService();
-        ParkingService parkingService = new ParkingService(parkingSpotDAO, ticketDAO);
-        try (MockedStatic<RegistrationNumberController> regNumberController = Mockito.mockStatic(RegistrationNumberController.class)) {
-        	String vehicleRegNumber = "123456789";
-			regNumberController.when(RegistrationNumberController::inputRegistrationNumber).thenReturn(vehicleRegNumber);
-        	 IncomingVehicleController incomingVehicleController = new IncomingVehicleController(parkingService);
-             incomingVehicleController.runRegistrationNumberController(ParkingType.BIKE);
-             incomingVehicleController.setNeedStopVehicleType(false);
-             Assert.assertTrue(parkingService.isThereAlreadyThisVehicleInDB(vehicleRegNumber, ParkingType.BIKE));
-        }
-    }
-    
-    
-    /**
-     * in the new architecture parkingService.processExitingVehicle(); has become 
-     * ExitingVehicleController.processExitingVehicle()
-    *//*
-    @Test
-    public void testParkingLotExit(){
-        testParkingACar();
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-        
-        //TODO: check that the fare generated and out time are populated correctly in the database
-    }
-*/
+	/**
+	 * in the new architecture parkingService.processExitingVehicle(); has become
+	 * ExitingVehicleController.processExitingVehicle()
+	 *//*
+		 * @Test public void testParkingLotExit(){ testParkingACar(); ParkingService
+		 * parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO,
+		 * ticketDAO);
+		 * 
+		 * //TODO: check that the fare generated and out time are populated correctly in
+		 * the database }
+		 */
 }
