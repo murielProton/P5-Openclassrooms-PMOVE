@@ -60,7 +60,7 @@ public class IncomingVehicleController{
      * @param INTEGER vehicleType
      * @return ParkingType
      */
-    private ParkingType processSelectedType(int vehicleType) {
+    private void processSelectedType(int vehicleType) {
         switch(vehicleType){
                 case 1: {
                     System.out.println("You are driving a car.");
@@ -82,14 +82,13 @@ public class IncomingVehicleController{
                     break;
                 }
             }
-            return null;
     }
     /**
      * Used in Class IncomingVehicleController by Method : processSelectedType(INTEGER)
      * @param ParkingType
      * @return VOID
      */
-    public void runRegistrationNumberController(ParkingType currentType) {
+    private void runRegistrationNumberController(ParkingType currentType) {
         if(parkingService.isThereAParkingSpotForType(currentType)){
             while(isNeedStopVehicleType()==false){
                 try {
@@ -97,6 +96,7 @@ public class IncomingVehicleController{
                     if(RegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber) &&
                     !parkingService.isThereAlreadyThisVehicleInDB(vehicleRegNumber, currentType)){
                         runSavingTicket(vehicleRegNumber, currentType);
+                        setNeedStopVehicleType(true);
                     }else{
                         System.out.println("Incorrect vehicule registered number.");
                     }
