@@ -15,7 +15,6 @@ import com.parkit.parkingsystem.util.RegistrationNumberSecurityUtil;
  */
 public class IncomingVehicleController{
     private boolean needStopVehicleType = false;
-    private ParkingType currentType = null;
     private ParkingService parkingService;
     
     /**
@@ -64,14 +63,14 @@ public class IncomingVehicleController{
         switch(vehicleType){
                 case 1: {
                     System.out.println("You are driving a car.");
-                    runRegistrationNumberController(currentType.CAR);
+                    runRegistrationNumberController(ParkingType.CAR);
                     //currentType = ParkingType.CAR;
                     // select TYpe + screen registration slate
                     break;
                 }
                 case 2: {
                     System.out.println("You are driving a motorbike.");
-                    runRegistrationNumberController(currentType.BIKE);
+                    runRegistrationNumberController(ParkingType.BIKE);
                     //currentType = ParkingType.BIKE;
                     // select TYpe + screen registration slate
                     break;
