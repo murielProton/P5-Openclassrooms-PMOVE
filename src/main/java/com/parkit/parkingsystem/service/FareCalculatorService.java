@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.util.DateHelperUtil;
+import com.parkit.parkingsystem.util.MathHelperUtil;
 
 /**
  * @author Muriel Proton
@@ -38,13 +39,16 @@ public class FareCalculatorService {
         double hoursOfParkedTime = ifWasLessThanThirtyMinutesGetItFree(lengthOfTimeDuringWhenCarWasParked);
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
-                ticket.setPrice(hoursOfParkedTime * Fare.CAR_RATE_PER_HOUR);
-                double carParkingFee = hoursOfParkedTime * Fare.CAR_RATE_PER_HOUR;
+                
+                double carParkingFee = MathHelperUtil.roundingPrice(
+                		hoursOfParkedTime* Fare.CAR_RATE_PER_HOUR);
+                ticket.setPrice(carParkingFee);
                 return carParkingFee;
             }
             case BIKE: {
-                ticket.setPrice(hoursOfParkedTime * Fare.BIKE_RATE_PER_HOUR);
-                double bikeParkingFee = hoursOfParkedTime * Fare.CAR_RATE_PER_HOUR;
+                double bikeParkingFee = MathHelperUtil.roundingPrice(
+                		hoursOfParkedTime * Fare.BIKE_RATE_PER_HOUR);
+                ticket.setPrice(bikeParkingFee);
                 return bikeParkingFee;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");

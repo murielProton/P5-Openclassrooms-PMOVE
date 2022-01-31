@@ -11,6 +11,7 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 import com.parkit.parkingsystem.util.DateHelperUtil;
+import com.parkit.parkingsystem.util.MathHelperUtil;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,7 +71,7 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket);
         Duration durationTypeLengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inTime, outTime);
         double doubleTypehoursOfParkedTime = DateHelperUtil.transformDurationIntoDouble(durationTypeLengthOfTimeDuringWhenCarWasParked);
-        double expectedBikeFarePerHour = ticket.getPrice()/doubleTypehoursOfParkedTime;
+        double expectedBikeFarePerHour = MathHelperUtil.roundingPrice(ticket.getPrice()/doubleTypehoursOfParkedTime);
         assertEquals(expectedBikeFarePerHour, Fare.BIKE_RATE_PER_HOUR);
         assertEquals(1.5, ticket.getPrice());
     }
@@ -147,7 +148,8 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals((0.75 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice() );
+        double expectedDouble = MathHelperUtil.roundingPrice(0.75 * Fare.BIKE_RATE_PER_HOUR);
+        assertEquals(expectedDouble, ticket.getPrice() );
     }
     /**
      * @author Muriel Proton
@@ -164,7 +166,8 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals( (0.75 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
+        double expected = MathHelperUtil.roundingPrice(0.75 * Fare.CAR_RATE_PER_HOUR);
+        assertEquals(expected, ticket.getPrice());
     }
     /**
      * @author Muriel Proton
