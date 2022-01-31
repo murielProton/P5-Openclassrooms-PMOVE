@@ -203,5 +203,61 @@ public class FareCalculatorServiceTest {
     	Duration expectedDuration = Duration.ofMinutes(40);
     	assertEquals( expectedDuration, realDuration);
     }
-
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method wasItThirtyMinutes(DURATION)
+     * run with success the 31 01 2022 at 13h27
+     */
+    @Test
+    public void wasItThirtyMinutesTest() {
+    	Duration lengthOfTime = Duration.ofMinutes(30);
+    	boolean wasItThirtyMinutes = fareCalculatorService.wasItThirtyMinutes(lengthOfTime);
+    	assertEquals(true,wasItThirtyMinutes );
+    }
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method wasItThirtyMinutes(DURATION)
+     * run with success the 31 01 2022 at 13h29
+     */
+    @Test
+    public void wasItLessThanThirtyMinutesTest() {
+    	Duration lengthOfTime = Duration.ofMinutes(15);
+    	boolean wasItThirtyMinutes = fareCalculatorService.wasItThirtyMinutes(lengthOfTime);
+    	assertEquals(true,wasItThirtyMinutes );
+    }
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method wasItThirtyMinutes(DURATION)
+     * run with success the 31 01 2022 at 13h29
+     */
+    @Test
+    public void wasItMoreThanThirtyMinutesTest() {
+    	Duration lengthOfTime = Duration.ofMinutes(45);
+    	boolean wasItThirtyMinutes = fareCalculatorService.wasItThirtyMinutes(lengthOfTime);
+    	assertEquals(false,wasItThirtyMinutes );
+    }
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method ifWasLessThanThirtyMinutesGetItFree(DURATION)
+     * run with success the  2022 at 
+     */
+    @Test
+    public void ifWasLessThanThirtyMinutesGetItFreeYesTest() {
+    	Duration lengthOfTimeDuringWhenCarWasParked = Duration.ofMinutes(15);
+    	Double expectedDouble = 0.0;
+    	Double doubleToTest = fareCalculatorService.ifWasLessThanThirtyMinutesGetItFree(lengthOfTimeDuringWhenCarWasParked);
+    	assertEquals(expectedDouble, doubleToTest);
+    }
+    /**
+     * @author Muriel Proton
+     * Test in class FareCalculatorService the method ifWasLessThanThirtyMinutesGetItFree(DURATION)
+     * run with success the 31 01 2022 at 13h50 
+     */
+    @Test
+    public void ifWasLessThanThirtyMinutesGetItFreeNoTest() {
+    	Duration lengthOfTimeDuringWhenCarWasParked = Duration.ofMinutes(45);
+    	Double expectedDouble = 0.75;
+    	Double doubleToTest = fareCalculatorService.ifWasLessThanThirtyMinutesGetItFree(lengthOfTimeDuringWhenCarWasParked);
+    	assertEquals(expectedDouble, doubleToTest);
+    }
 }

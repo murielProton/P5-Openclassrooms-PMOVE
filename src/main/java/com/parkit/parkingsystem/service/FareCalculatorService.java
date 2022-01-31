@@ -35,7 +35,7 @@ public class FareCalculatorService {
      */
     public double calculateFare(Ticket ticket){
         Duration lengthOfTimeDuringWhenCarWasParked = getDurationOfTicket(ticket);
-        double hoursOfParkedTime = DateHelperUtil.transformDurationIntoDouble(lengthOfTimeDuringWhenCarWasParked);
+        double hoursOfParkedTime = ifWasLessThanThirtyMinutesGetItFree(lengthOfTimeDuringWhenCarWasParked);
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
                 ticket.setPrice(hoursOfParkedTime * Fare.CAR_RATE_PER_HOUR);
@@ -50,5 +50,35 @@ public class FareCalculatorService {
             default: throw new IllegalArgumentException("Unkown Parking Type");
         }
     }
-
+    /**
+     * Used in Class ExitingVehicleController by Method : ifWasLessThanThirtyMinutesGetItFree(DURATION)
+     * @param DURATION
+     * @return BOOLEAN
+     */
+    public boolean wasItThirtyMinutes(Duration lengthOfTimeDuringWhenCarWasParked) {
+    	Duration thirtyMinutes = Duration.ofMinutes(30);
+    	/**
+    	 * Duration < thirtyMinutes = Duration.compareTo(thirtyMinutes) = -1
+    	 * Duration == thirtyMinutes = Duration.compareTo(thirtyMinutes) = 0 
+    	 * Duration > thirtyMinutes = Duration.compareTo(thirtyMinutes) = 1
+    	 */
+    	int wasItInferiorOrEqual = lengthOfTimeDuringWhenCarWasParked.compareTo(thirtyMinutes);
+    	if(wasItInferiorOrEqual < 1) {
+    		return true;
+    	}else {
+    		return false;
+    	}
+	}
+    /**
+     * Used in Class ExitingVehicleController by Method : calculateFare(Ticket)
+     * @param DURATION
+     * @return DOUBLE
+     */
+    public double ifWasLessThanThirtyMinutesGetItFree(Duration lengthOfTimeDuringWhenCarWasParked) {
+    	if(wasItThirtyMinutes(lengthOfTimeDuringWhenCarWasParked)) {
+    		return 0.0;
+    	}else {
+    		return DateHelperUtil.transformDurationIntoDouble(lengthOfTimeDuringWhenCarWasParked);
+    	}
+	}
 }
