@@ -127,4 +127,37 @@ public class TicketDAOTest {
     	boolean wasTheTicketRealyUpdated = ticketDAO.updatePriceOfCurrentTicket(ticketToSave, price);
     	assertEquals(true, wasTheTicketRealyUpdated);
     }
+    /**
+	 * @author Muriel Proton
+	 * Test in class TicketDAO method getIfItIsALoyalCustomer(STRING)
+	 * and method resultSetToTicket(STRING, RESULTSET)
+	 * run with success the 31 01 2022
+	 */
+    @Test
+    public void getIfItIsALoyalCustomerTest() { 
+    	Ticket ticketToSave1 = new Ticket();
+        ParkingSpot parkingSpot1 = new ParkingSpot(2, ParkingType.CAR, true);
+        LocalDateTime outTime = inTime.plusMinutes(45);;
+        ticketToSave1.setParkingSpot(parkingSpot1);
+        ticketToSave1.setVehicleRegNumber("123456789");
+        ticketToSave1.setPrice(1.13);
+        ticketToSave1.setInTime(inTime);
+        ticketToSave1.setOutTime(outTime);
+        ticketDAO.saveTicket(ticketToSave);
+        ticketDAO.saveTicket(ticketToSave1);
+        boolean isItALoyalC = ticketDAO.isItALoyalCustomer("123456789");
+        assertEquals(true, isItALoyalC);
+    }
+    /**
+	 * @author Muriel Proton
+	 * Test in class TicketDAO method getIfItIsALoyalCustomer(STRING)
+	 * and method resultSetToTicket(STRING, RESULTSET)
+	 * run with success the 31 01 2022
+	 */
+    @Test
+    public void getIfItNotIsALoyalCustomerTest() { 
+        ticketDAO.saveTicket(ticketToSave);
+        boolean isItALoyalC = ticketDAO.isItALoyalCustomer("123456789");
+        assertEquals(false, isItALoyalC);
+    }
 }

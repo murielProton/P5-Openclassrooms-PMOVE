@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 import com.parkit.parkingsystem.constants.Fare;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.util.DateHelperUtil;
 import com.parkit.parkingsystem.util.MathHelperUtil;
@@ -13,6 +14,10 @@ import com.parkit.parkingsystem.util.MathHelperUtil;
  *
  */
 public class FareCalculatorService {
+
+    private TicketDAO ticketDAO =  new TicketDAO();
+	
+	
     /**
      * Used in Class FareCalculatorService by Method : calculateFare(Ticket)
      * @param Ticket
@@ -35,26 +40,48 @@ public class FareCalculatorService {
      * @return DOUBLE
      */
     public double calculateFare(Ticket ticket){
+        double parkingTypeRatePerHour = getRatePerHour(ticket);
         Duration lengthOfTimeDuringWhenCarWasParked = getDurationOfTicket(ticket);
         double hoursOfParkedTime = ifWasLessThanThirtyMinutesGetItFree(lengthOfTimeDuringWhenCarWasParked);
+        double priceRateForCustumer = getPriceRateForCustumer(ticket.getVehicleRegNumber());
+        double parkingFee = MathHelperUtil
+        		.roundingPrice(hoursOfParkedTime * parkingTypeRatePerHour * priceRateForCustumer);
+        ticket.setPrice(parkingFee);
+        return parkingFee;
+    }
+    /**
+     * Used in Class FareCalculatorService by Method : calculateFare(DURATION)
+     * @param Ticket
+     * @return DOUBLE
+     */
+	private double getRatePerHour(Ticket ticket) {
+		double parkingTypeRatePerHour;
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
-                
-                double carParkingFee = MathHelperUtil.roundingPrice(
-                		hoursOfParkedTime* Fare.CAR_RATE_PER_HOUR);
-                ticket.setPrice(carParkingFee);
-                return carParkingFee;
+            	parkingTypeRatePerHour = Fare.CAR_RATE_PER_HOUR;
+            	break;
             }
             case BIKE: {
-                double bikeParkingFee = MathHelperUtil.roundingPrice(
-                		hoursOfParkedTime * Fare.BIKE_RATE_PER_HOUR);
-                ticket.setPrice(bikeParkingFee);
-                return bikeParkingFee;
+            	parkingTypeRatePerHour = Fare.BIKE_RATE_PER_HOUR;
+            	break;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
         }
-    }
+		return parkingTypeRatePerHour;
+	}
     /**
+     * Used in Class FareCalculatorService by Method : calculateFare(DURATION)
+     * @param STRING
+     * @return DOUBLE
+     */
+    private double getPriceRateForCustumer(String vehicleRegNumber) {
+    	if(ticketDAO.isItALoyalCustomer(vehicleRegNumber)) {
+    		return 0.95;
+    	}else {
+    		return 1;
+    	}
+	}
+	/**
      * Used in Class ExitingVehicleController by Method : ifWasLessThanThirtyMinutesGetItFree(DURATION)
      * @param DURATION
      * @return BOOLEAN
@@ -85,4 +112,6 @@ public class FareCalculatorService {
     		return DateHelperUtil.transformDurationIntoDouble(lengthOfTimeDuringWhenCarWasParked);
     	}
 	}
+    
+    
 }

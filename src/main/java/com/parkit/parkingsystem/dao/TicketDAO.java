@@ -42,7 +42,7 @@ public class TicketDAO {
             
             querrySaveTicket.setDouble(3, ticket.getPrice());
             querrySaveTicket.setTimestamp(4, DateHelperUtil.convertLocalDateTimeToTimestamp(ticket.getInTime()));
-            querrySaveTicket.setTimestamp(5, null);
+            querrySaveTicket.setTimestamp(5, DateHelperUtil.convertLocalDateTimeToTimestamp(ticket.getOutTime()));
             return querrySaveTicket.executeUpdate()==1;
         }catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
@@ -204,5 +204,33 @@ public class TicketDAO {
         }
         return false;
     }
-
+    /**
+     * Used in Class : PayementService by Method : getTicketOfExitingVehicleAndSetOutTime(String)
+     * @param STRING vehicleRegNumber
+     * @return Ticket
+     */
+    public boolean isItALoyalCustomer(String vehicleRegNumber) {
+        Connection getTicketConnection = null;
+        try {
+            getTicketConnection = dataBaseConfig.getConnection();
+            PreparedStatement querryGetTicket = getTicketConnection.
+            		prepareStatement(DBConstants.GET_TICKET_OF_LOYAL_CUSTOMER);
+            querryGetTicket.setString(1, vehicleRegNumber);
+            ResultSet ticketFromDatabase = querryGetTicket.executeQuery();
+            //TEST doesn't pass after here
+            Ticket ticket = resultSetToTicket(vehicleRegNumber, ticketFromDatabase);
+            if (ticket!=null) {
+            	return true;
+            }
+            dataBaseConfig.closeResultSet(ticketFromDatabase);
+            dataBaseConfig.closePreparedStatement(querryGetTicket);
+            
+        }catch (Exception ex){
+            logger.error("Error fetching next available slot",ex);
+        }finally {
+            dataBaseConfig.closeConnection(getTicketConnection);
+           
+        }
+        return false;
+    }
 }
