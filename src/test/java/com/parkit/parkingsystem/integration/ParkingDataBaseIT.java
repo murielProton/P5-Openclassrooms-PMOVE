@@ -13,9 +13,6 @@ import com.parkit.parkingsystem.util.InputReaderUtil;
 import junit.framework.Assert;
 
 import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.AfterAll;
-//import org.junit.jupiter.api.BeforeAll;
-//import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -39,13 +36,18 @@ public class ParkingDataBaseIT {
     	dataBasePrepareService.clearDataBaseEntries();
 	}
 	/**
-	 * @author Muriel Proton in the new architecture
-	 *         parkingService.processIncomingVehicle(); has become
-	 *         IncomingVehicleController.runRegistrationNumberController(ParkingType
-	 *         currentType) Integration test Test running through classes : +
-	 *         ParkingService + IncomingVehicleController +
-	 *         RegistrationNumberController run with success the 27 01 2022 at
-	 *         17h438
+	 * @author Muriel Proton 
+	 * 		   in the new architecture parkingService.processIncomingVehicle(); has become
+	 *         IncomingVehicleController.runRegistrationNumberController(ParkingType)
+	 *         This class is not mend to be handled in test or otherwise, it is private.
+	 *         It is handled by incomingVehicleController.selectVehicleType();
+	 *         Therefore we begin the test N to N here
+	 *         Integration test Test running through classes : 
+	 *         + ParkingService 
+	 *         + IncomingVehicleController 
+	 *         + InputReaderUtil
+	 *         + RegistrationNumberController
+	 *         run with success the 27 01 2022 at 17h438
 	 */
 	@Test
 	public void testParkingABike() {
@@ -56,7 +58,7 @@ public class ParkingDataBaseIT {
 				.mockStatic(RegistrationNumberController.class)) {
 			try (MockedStatic<InputReaderUtil> inputReaderUtil = Mockito
 					.mockStatic(InputReaderUtil.class)) {
-				//Préparation select Bike
+				//Preparation select Bike
 				inputReaderUtil.when(InputReaderUtil::readInt).thenReturn(2);
 				String vehicleRegNumber = "147852369";
 				regNumberController.when(RegistrationNumberController::inputRegistrationNumber)
@@ -68,17 +70,5 @@ public class ParkingDataBaseIT {
 				Assert.assertTrue(parkingService.isThereAlreadyThisVehicleInDB(vehicleRegNumber, ParkingType.BIKE));
 			}
 		}
-	}
-
-	/**
-	 * in the new architecture parkingService.processExitingVehicle(); has become
-	 * ExitingVehicleController.processExitingVehicle()
-	 *//*
-		 * @Test public void testParkingLotExit(){ testParkingACar(); ParkingService
-		 * parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO,
-		 * ticketDAO);
-		 * 
-		 * //TODO: check that the fare generated and out time are populated correctly in
-		 * the database }
-		 */
+	}	 
 }

@@ -86,7 +86,7 @@ public class AlphaControllerTest {
     	}
     }
 	
-	@Test
+	/*@Test
     public void  myTestAlphaControllerEnteringAndExitingBike() {
 		String regNumberBike = "123456789";
     	try (MockedStatic<InputReaderUtil> mockedInput = Mockito.mockStatic(InputReaderUtil.class)) {
@@ -107,5 +107,5 @@ public class AlphaControllerTest {
     		Assert.assertEquals(4,new ParkingSpotDAO().getNextAvailableSlot(ParkingType.BIKE));
     		Assert.assertEquals(1,new ParkingSpotDAO().getNextAvailableSlot(ParkingType.CAR));
     	}
-    }
+    }*/
 }
