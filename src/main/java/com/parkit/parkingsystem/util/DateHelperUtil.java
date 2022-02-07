@@ -1,6 +1,7 @@
 package com.parkit.parkingsystem.util;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.sql.Timestamp;
 import java.time.Duration;
 
@@ -20,7 +21,8 @@ public class DateHelperUtil {
 	 */
     public static Duration findLengthOfTimeBetweenTwoLocalDateTimes(LocalDateTime in, LocalDateTime out){
         Duration lengthOfTimeDuringWhenCarWasParked = Duration.between(in, out);
-        return lengthOfTimeDuringWhenCarWasParked;
+        Duration safeLengthOfTimeDuringWhenCarWasParked = lengthOfTimeDuringWhenCarWasParked.truncatedTo(ChronoUnit.MINUTES);
+        return safeLengthOfTimeDuringWhenCarWasParked;
     }
     
     /**

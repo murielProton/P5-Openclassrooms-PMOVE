@@ -2,6 +2,7 @@ package com.parkit.parkingsystem.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.dao.TicketDAO;
@@ -24,12 +25,23 @@ public class FareCalculatorService {
      * @return DURATION
      */
     public Duration getDurationOfTicket(Ticket ticket){
-        if( ticket.getOutTime() == null || ticket.getInTime().isAfter(ticket.getOutTime()) ){
-            throw new IllegalArgumentException("Out time provided is incorrect: "+ticket.getOutTime());
+    	/*When not rounded the outTime == inTime
+    	 * there for we need to have a outTimeSafe
+    	 * first macke sure outTime has been assigned to a value
+    	 * then round it.
+    	 */
+    	LocalDateTime outTimeSafe = null;
+		if( ticket.getOutTime() != null) {
+			outTimeSafe = ticket.getOutTime().plusSeconds(1).truncatedTo(ChronoUnit.SECONDS);
+		}
+		/*now we can test safely if the out time is after the in time. The test will always work.
+		 * or not ^v^ */
+		if( outTimeSafe == null || ticket.getInTime().isAfter(outTimeSafe) ){
+            throw new IllegalArgumentException("Out time provided is incorrect: "+outTimeSafe);
         }
 
         LocalDateTime inHour = ticket.getInTime();
-        LocalDateTime outHour = ticket.getOutTime();
+        LocalDateTime outHour = outTimeSafe;
 
         Duration lengthOfTimeDuringWhenCarWasParked = DateHelperUtil.findLengthOfTimeBetweenTwoLocalDateTimes(inHour, outHour);
         return lengthOfTimeDuringWhenCarWasParked;

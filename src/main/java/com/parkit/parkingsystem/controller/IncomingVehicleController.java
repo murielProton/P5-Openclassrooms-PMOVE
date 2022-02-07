@@ -92,6 +92,8 @@ public class IncomingVehicleController{
             while(isNeedStopVehicleType()==false){
                 try {
                     String vehicleRegNumber = RegistrationNumberController.inputRegistrationNumber();
+                    // if entering vehicle set setNeedStopVehicleType to true
+                    // if exiting vehicle set setNeedStopVehicleType to false
                     if(RegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber) &&
                     !parkingService.isThereAlreadyThisVehicleInDB(vehicleRegNumber, currentType)){
                         runSavingTicket(vehicleRegNumber, currentType);
@@ -140,11 +142,20 @@ public class IncomingVehicleController{
         System.out.println("Please park your vehicle in spot number : "+parkingSpot.getId());
         System.out.println("The gate opens !");
     }
-
+    /**
+     * Used in Class IncomingVehicleController by Method : 
+     * @param NONE
+     * @return BOOLEAN
+     */
 	public boolean isNeedStopVehicleType() {
 		return needStopVehicleType;
 	}
-
+    /**
+     * Used in Class IncomingVehicleController by Method : processSelectedType(INT) & 
+     * runRegistrationNumberController(ParkingType)
+     * @param BOOLEAN
+     * @return BOOLEAN
+     */
 	public void setNeedStopVehicleType(boolean needStopVehicleType) {
 		this.needStopVehicleType = needStopVehicleType;
 	}
