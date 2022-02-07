@@ -1,7 +1,11 @@
 com\parkit\parkingsystem\integration\ParkingDataBaseIT.class
-com\parkit\parkingsystem\ParkingServiceTest.class
+com\parkit\parkingsystem\RegistrationNumberSecurityUtilTest.class
+com\parkit\parkingsystem\TicketDAOTest.class
+com\parkit\parkingsystem\MathHelperUtilTest.class
 com\parkit\parkingsystem\integration\service\DataBasePrepareService.class
-com\parkit\parkingsystem\InputReaderUtilTest.class
+com\parkit\parkingsystem\DataBaseTestConfig.class
+com\parkit\parkingsystem\DateHelperUtilTest.class
+com\parkit\parkingsystem\AlphaControllerTest.class
+com\parkit\parkingsystem\ParkingSpotDAOTest.class
 com\parkit\parkingsystem\FareCalculatorServiceTest.class
-com\parkit\parkingsystem\InteractiveShellTest.class
 com\parkit\parkingsystem\integration\config\DataBaseTestConfig.class
