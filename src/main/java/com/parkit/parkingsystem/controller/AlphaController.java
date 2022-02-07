@@ -43,8 +43,9 @@ public class AlphaController {
      * @return VOID
     */
     public void run(){
+    	working = true;
         while(working){
-            selectionAction();
+        	selectionAction();
         }
     }
     /**
