@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DateHelperUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">parking-system</a> &gt; <a href="index.source.html" class="el_package">com.parkit.parkingsystem.util</a> &gt; <span class="el_source">DateHelperUtil.java</span></div><h1>DateHelperUtil.java</h1><pre class="source lang-java linenums">package com.parkit.parkingsystem.util;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.sql.Timestamp;
+import java.time.Duration;
+
+/**
+ * @author Muriel Proton
+ *
+ */
+
+<span class="nc" id="L13">public class DateHelperUtil {</span>
+	
+	/**
+	 * Used in Class FareCalculatorService by Method : getDurationOfTicket(Ticket)
+	 * @param LOCALDATETIME in
+	 * @param LOCALDATETIME out
+     * @return DURATION
+	 *
+	 */
+    public static Duration findLengthOfTimeBetweenTwoLocalDateTimes(LocalDateTime in, LocalDateTime out){
+<span class="fc" id="L23">        Duration lengthOfTimeDuringWhenCarWasParked = Duration.between(in, out);</span>
+<span class="fc" id="L24">        Duration safeLengthOfTimeDuringWhenCarWasParked = lengthOfTimeDuringWhenCarWasParked.truncatedTo(ChronoUnit.MINUTES);</span>
+<span class="fc" id="L25">        return safeLengthOfTimeDuringWhenCarWasParked;</span>
+    }
+    
+    /**
+     * Used in Class FareCalculatorService by Method : calculateFare(Ticket
+     * @param DURATION
+     * @return DOUBLE
+     */
+    public static double transformDurationIntoDouble(Duration newDuration){
+        
+<span class="fc" id="L35">        double durationTypeConvertedToDouble = (double)newDuration.toMinutes()/60;</span>
+<span class="fc" id="L36">        return durationTypeConvertedToDouble;</span>
+    }
+    
+    /**
+     * Used in Class TicketDAO by Method : saveTicket(Ticket) &amp; updateOutTimeOfCurrentTicket(Ticket)
+     * @param LOCALDATETIME
+     * @return TIMESTAMP
+     */
+    public static Timestamp convertLocalDateTimeToTimestamp(LocalDateTime aDateAndTime){
+<span class="fc bfc" id="L45" title="All 2 branches covered.">    	if(aDateAndTime == null) {</span>
+<span class="fc" id="L46">    		return null;</span>
+    	}
+<span class="fc" id="L48">    	return Timestamp.valueOf(aDateAndTime);</span>
+    }
+    
+    /**
+     * Used in Class TicketDAO by Method : resultSetToTicket(String, ResultSet)
+     * @param TIMESTAMP
+     * @return LOCALDATETIME
+     */
+    public static LocalDateTime convertTimestampsToLocalDateTime(Timestamp aTimestamp){
+<span class="fc bfc" id="L57" title="All 2 branches covered.">    	if(aTimestamp == null) {</span>
+<span class="fc" id="L58">    		return null;</span>
+    	}
+<span class="fc" id="L60">    	return aTimestamp.toLocalDateTime();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

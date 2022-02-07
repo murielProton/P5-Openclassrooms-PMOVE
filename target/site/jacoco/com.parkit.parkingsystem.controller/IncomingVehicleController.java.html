@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IncomingVehicleController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">parking-system</a> &gt; <a href="index.source.html" class="el_package">com.parkit.parkingsystem.controller</a> &gt; <span class="el_source">IncomingVehicleController.java</span></div><h1>IncomingVehicleController.java</h1><pre class="source lang-java linenums">package com.parkit.parkingsystem.controller;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.model.ParkingSpot;
+import com.parkit.parkingsystem.service.ParkingService;
+import com.parkit.parkingsystem.util.InputReaderUtil;
+import com.parkit.parkingsystem.util.RegistrationNumberSecurityUtil;
+
+/**
+ * @author Muriel Proton
+ *
+ */
+public class IncomingVehicleController{
+<span class="fc" id="L17">    private boolean needStopVehicleType = false;</span>
+    private ParkingService parkingService;
+    
+    /**
+     * CONSTRUCTOR method
+     * Used in Class AlphaController
+     * @param ParkingService
+     */
+<span class="fc" id="L25">    public IncomingVehicleController(ParkingService parkingService) {</span>
+<span class="fc" id="L26">        this.parkingService = parkingService;</span>
+<span class="fc" id="L27">    }</span>
+    
+    /**
+     * Used in Class AlphaController by Method : processSelectAction(integer)
+     * @param NONE
+     * @return VOID
+     */
+    public void runSelectVehicleType(){
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">        if(parkingService.isThereAParkingSpotForAnyType()){</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">            while(isNeedStopVehicleType()==false){</span>
+<span class="fc" id="L37">                selectVehicleType();</span>
+            }
+        }else{
+<span class="nc" id="L40">            System.out.println(&quot;We are verry sorry all our parking slots are currently takent.&quot;);</span>
+<span class="nc" id="L41">            System.out.println(&quot;Please accept our sincere appologies, while waiting.&quot;);</span>
+        }
+<span class="fc" id="L43">    }</span>
+    
+    /**
+     * Used in Class IncomingVehicleController by Method : runSelectVehicleType()
+     * @param NONE
+     * @return VOID
+     */
+    public void selectVehicleType(){
+<span class="fc" id="L51">            System.out.println(&quot;Please select vehicle type from menu&quot;);</span>
+<span class="fc" id="L52">            System.out.println(&quot;1 CAR&quot;);</span>
+<span class="fc" id="L53">            System.out.println(&quot;2 BIKE&quot;);</span>
+<span class="fc" id="L54">            int selectVihicleType = InputReaderUtil.readInt();</span>
+<span class="fc" id="L55">            processSelectedType(selectVihicleType);</span>
+<span class="fc" id="L56">    }</span>
+    /**
+     * Used in Class IncomingVehicleController by Method : selectVehicleType()
+     * @param INTEGER vehicleType
+     * @return ParkingType
+     */
+    private void processSelectedType(int vehicleType) {
+<span class="pc bpc" id="L63" title="2 of 3 branches missed.">        switch(vehicleType){</span>
+                case 1: {
+<span class="fc" id="L65">                    System.out.println(&quot;You are driving a car.&quot;);</span>
+<span class="fc" id="L66">                    runRegistrationNumberController(ParkingType.CAR);</span>
+                    //currentType = ParkingType.CAR;
+                    // select TYpe + screen registration slate
+<span class="fc" id="L69">                    break;</span>
+                }
+                case 2: {
+<span class="nc" id="L72">                    System.out.println(&quot;You are driving a motorbike.&quot;);</span>
+<span class="nc" id="L73">                    runRegistrationNumberController(ParkingType.BIKE);</span>
+                    //currentType = ParkingType.BIKE;
+                    // select TYpe + screen registration slate
+<span class="nc" id="L76">                    break;</span>
+                }
+                default: {
+<span class="nc" id="L79">                    System.out.println(&quot;Incorrect type provided.&quot;);</span>
+<span class="nc" id="L80">                    setNeedStopVehicleType(true);</span>
+                    break;
+                }
+            }
+<span class="fc" id="L84">    }</span>
+    /**
+     * Used in Class IncomingVehicleController by Method : processSelectedType(INTEGER)
+     * @param ParkingType
+     * @return VOID
+     */
+    private void runRegistrationNumberController(ParkingType currentType) {
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        if(parkingService.isThereAParkingSpotForType(currentType)){</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">            while(isNeedStopVehicleType()==false){</span>
+                try {
+<span class="fc" id="L94">                    String vehicleRegNumber = RegistrationNumberController.inputRegistrationNumber();</span>
+                    // if entering vehicle set setNeedStopVehicleType to true
+                    // if exiting vehicle set setNeedStopVehicleType to false
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">                    if(RegistrationNumberSecurityUtil.checkIfVehicleRegistrationNumberIsValid(vehicleRegNumber) &amp;&amp;</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">                    !parkingService.isThereAlreadyThisVehicleInDB(vehicleRegNumber, currentType)){</span>
+<span class="fc" id="L99">                        runSavingTicket(vehicleRegNumber, currentType);</span>
+<span class="fc" id="L100">                        setNeedStopVehicleType(true);</span>
+                    }else{
+<span class="nc" id="L102">                        System.out.println(&quot;Incorrect vehicule registered number.&quot;);</span>
+                    }
+<span class="nc" id="L104">                } catch (Exception e) {</span>
+<span class="nc" id="L105">                    e.printStackTrace();</span>
+<span class="pc" id="L106">                }</span>
+            }
+        }else{
+<span class="nc" id="L109">            System.out.println(&quot;We are verry sorry all our parking slots for are currently taken.&quot;);</span>
+<span class="nc" id="L110">            System.out.println(&quot;Please accept our sincere appologies, while waiting.&quot;);</span>
+        }
+<span class="fc" id="L112">    }</span>
+    /**
+     * Used in Class IncomingVehicleController by Method : runRegistrationNumberController(ParkingType)
+     * @param STRING vehicleRegNumber
+     * @param ParkingType
+     * @return VOID
+     */
+    private void runSavingTicket(String vehicleRegNumber, ParkingType currentType){
+        try{
+<span class="fc" id="L121">            LocalDateTime inTime = LocalDateTime.now();</span>
+<span class="fc" id="L122">            ParkingSpot parkingSpotWhereToGo = parkingService.getNextParkingNumberIfAvailable(currentType);</span>
+<span class="fc" id="L123">            parkingService.fillParkingSpot(parkingSpotWhereToGo);</span>
+<span class="fc" id="L124">            parkingService.saveIncomingVehicleInDB(parkingSpotWhereToGo, vehicleRegNumber);</span>
+<span class="fc" id="L125">            successInSavingTicket(vehicleRegNumber, inTime, parkingSpotWhereToGo);</span>
+<span class="nc" id="L126">        }catch(Exception e){</span>
+<span class="nc" id="L127">            e.printStackTrace();</span>
+<span class="nc" id="L128">            System.out.println(&quot;Unable to process incoming vehicle&quot;);</span>
+<span class="fc" id="L129">        }</span>
+<span class="fc" id="L130">    }</span>
+    /**
+     * Used in Class IncomingVehicleController by Method : runSavingTicket(String, ParkingType)
+     * @param STRING vehicleRegNumber
+     * @param LOCALDATETIME inTime
+     * @param ParkingSpot
+     * @return VOID
+     */
+    private void successInSavingTicket(String vehicleRegNumber, LocalDateTime inTime, ParkingSpot parkingSpot){
+<span class="fc" id="L139">    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm&quot;);</span>
+<span class="fc" id="L140">    	String dateAndTimeOfArrival = inTime.format(formatter);</span>
+<span class="fc" id="L141">        System.out.println(&quot;You've entered this day : &quot;+ dateAndTimeOfArrival);</span>
+<span class="fc" id="L142">        System.out.println(&quot;Please park your vehicle in spot number : &quot;+parkingSpot.getId());</span>
+<span class="fc" id="L143">        System.out.println(&quot;The gate opens !&quot;);</span>
+<span class="fc" id="L144">    }</span>
+    /**
+     * Used in Class IncomingVehicleController by Method : 
+     * @param NONE
+     * @return BOOLEAN
+     */
+	public boolean isNeedStopVehicleType() {
+<span class="fc" id="L151">		return needStopVehicleType;</span>
+	}
+    /**
+     * Used in Class IncomingVehicleController by Method : processSelectedType(INT) &amp; 
+     * runRegistrationNumberController(ParkingType)
+     * @param BOOLEAN
+     * @return BOOLEAN
+     */
+	public void setNeedStopVehicleType(boolean needStopVehicleType) {
+<span class="fc" id="L160">		this.needStopVehicleType = needStopVehicleType;</span>
+<span class="fc" id="L161">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

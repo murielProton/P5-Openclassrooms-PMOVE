@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TicketDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">parking-system</a> &gt; <a href="index.source.html" class="el_package">com.parkit.parkingsystem.dao</a> &gt; <span class="el_source">TicketDAO.java</span></div><h1>TicketDAO.java</h1><pre class="source lang-java linenums">package com.parkit.parkingsystem.dao;
+
+import com.parkit.parkingsystem.config.DataBaseConfig;
+import com.parkit.parkingsystem.constants.DBConstants;
+import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.model.ParkingSpot;
+import com.parkit.parkingsystem.model.Ticket;
+import com.parkit.parkingsystem.util.DateHelperUtil;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+
+/**
+ * @author Muriel Proton
+ *
+ */
+<span class="fc" id="L23">public class TicketDAO {</span>
+
+<span class="fc" id="L25">    private static final Logger logger = LogManager.getLogger(&quot;TicketDAO&quot;);</span>
+<span class="fc" id="L26">    public static DataBaseConfig dataBaseConfig = new DataBaseConfig();</span>
+
+    /**
+     * Used in Class : ParkingService by Method : saveIncomingVehicleInDB(ParkingSpot, String)
+     * @param Ticket
+     * @return boolean
+     */
+    public boolean saveTicket(Ticket ticket){
+<span class="fc" id="L34">        Connection saveTicketConnection = null;</span>
+        try {
+<span class="fc" id="L36">            saveTicketConnection = dataBaseConfig.getConnection();</span>
+<span class="fc" id="L37">            PreparedStatement querrySaveTicket = saveTicketConnection.prepareStatement(DBConstants.SAVE_TICKET);</span>
+            //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
+            //querrySaveTicket.setInt(1,ticket.getId());
+<span class="fc" id="L40">            querrySaveTicket.setInt(1,ticket.getParkingSpot().getId());</span>
+<span class="fc" id="L41">            querrySaveTicket.setString(2, ticket.getVehicleRegNumber());</span>
+            
+<span class="fc" id="L43">            querrySaveTicket.setDouble(3, ticket.getPrice());</span>
+<span class="fc" id="L44">            querrySaveTicket.setTimestamp(4, DateHelperUtil.convertLocalDateTimeToTimestamp(ticket.getInTime()));</span>
+<span class="fc" id="L45">            querrySaveTicket.setTimestamp(5, DateHelperUtil.convertLocalDateTimeToTimestamp(ticket.getOutTime()));</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">            return querrySaveTicket.executeUpdate()==1;</span>
+<span class="nc" id="L47">        }catch (Exception ex){</span>
+<span class="nc" id="L48">            logger.error(&quot;Error fetching next available slot&quot;,ex);</span>
+        }finally {
+<span class="fc" id="L50">            dataBaseConfig.closeConnection(saveTicketConnection);</span>
+        
+        }
+<span class="nc" id="L53">        return false;</span>
+    }
+
+    /**
+     * Used in Class : ParkingService by Method : getTicketForExitingVehicle(String)
+     * @param STRING vehicleRegNumber
+     * @return Ticket
+     */
+    public Ticket getTicket(String vehicleRegNumber) {
+<span class="fc" id="L62">        Connection getTicketConnection = null;</span>
+<span class="fc" id="L63">        Ticket ticket = null;</span>
+        try {
+<span class="fc" id="L65">            getTicketConnection = dataBaseConfig.getConnection();</span>
+<span class="fc" id="L66">            PreparedStatement querryGetTicket = getTicketConnection.prepareStatement(DBConstants.GET_TICKET);</span>
+            //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
+<span class="fc" id="L68">            querryGetTicket.setString(1,vehicleRegNumber);</span>
+<span class="fc" id="L69">            ResultSet ticketFromDatabase = querryGetTicket.executeQuery();</span>
+<span class="fc" id="L70">            ticket = resultSetToTicket(vehicleRegNumber, ticketFromDatabase);</span>
+<span class="fc" id="L71">            dataBaseConfig.closeResultSet(ticketFromDatabase);</span>
+<span class="fc" id="L72">            dataBaseConfig.closePreparedStatement(querryGetTicket);</span>
+<span class="nc" id="L73">        }catch (Exception ex){</span>
+<span class="nc" id="L74">            logger.error(&quot;Error fetching next available slot&quot;,ex);</span>
+        }finally {
+<span class="fc" id="L76">            dataBaseConfig.closeConnection(getTicketConnection);</span>
+           
+        }
+<span class="fc" id="L79">        return ticket;</span>
+    }
+    
+    /**
+     * Used in Class : PayementService by Method : getTicketOfExitingVehicleAndSetOutTime(String)
+     * @param STRING vehicleRegNumber
+     * @return Ticket
+     */
+    public Ticket getTicketOfExitingVehicul(String vehicleRegNumber) {
+<span class="fc" id="L88">        Connection getTicketConnection = null;</span>
+<span class="fc" id="L89">        Ticket ticket = null;</span>
+        try {
+<span class="fc" id="L91">            getTicketConnection = dataBaseConfig.getConnection();</span>
+<span class="fc" id="L92">            PreparedStatement querryGetTicket = getTicketConnection.prepareStatement(DBConstants.GET_EXITING_VEHICUL_TICKET);</span>
+<span class="fc" id="L93">            querryGetTicket.setString(1, vehicleRegNumber);</span>
+<span class="fc" id="L94">            ResultSet ticketFromDatabase = querryGetTicket.executeQuery();</span>
+<span class="fc" id="L95">            ticket = resultSetToTicket(vehicleRegNumber, ticketFromDatabase);</span>
+<span class="fc" id="L96">            dataBaseConfig.closeResultSet(ticketFromDatabase);</span>
+<span class="fc" id="L97">            dataBaseConfig.closePreparedStatement(querryGetTicket);</span>
+<span class="nc" id="L98">        }catch (Exception ex){</span>
+<span class="nc" id="L99">            logger.error(&quot;Error fetching next available slot&quot;,ex);</span>
+        }finally {
+<span class="fc" id="L101">            dataBaseConfig.closeConnection(getTicketConnection);</span>
+           
+        }
+<span class="fc" id="L104">        return ticket;</span>
+    }
+	/**
+	 * standard assignment of values of a ticket from database to values of the object ticket
+	 * Must be used every time a ticket is recovered from database
+	 * Used in Class : TicketDAO by Method : getTicket(String) &amp;  getTicketOfExitingVehicul(String)
+	 * @param STRING vehicleRegNumber
+	 * @param ResultSet ticketFromDatabase
+	 * @return Ticket
+	 * @throws SQLException
+	 */
+	public static Ticket resultSetToTicket(String vehicleRegNumber, ResultSet ticketFromDatabase)
+			throws SQLException {
+<span class="fc" id="L117">		Ticket ticket = null;</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">		if(ticketFromDatabase.next()){</span>
+<span class="fc" id="L119">		    ticket = new Ticket();</span>
+<span class="fc" id="L120">		    ParkingSpot parkingSpot = new ParkingSpot(ticketFromDatabase.getInt(1), ParkingType.valueOf(ticketFromDatabase.getString(6)),false);</span>
+<span class="fc" id="L121">		    ticket.setParkingSpot(parkingSpot);</span>
+<span class="fc" id="L122">		    ticket.setId(ticketFromDatabase.getInt(2));</span>
+<span class="fc" id="L123">		    ticket.setVehicleRegNumber(vehicleRegNumber);</span>
+<span class="fc" id="L124">		    ticket.setPrice(ticketFromDatabase.getDouble(3));</span>
+<span class="fc" id="L125">		    ticket.setInTime(DateHelperUtil.convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(4)));</span>
+<span class="fc" id="L126">		    ticket.setOutTime(DateHelperUtil.convertTimestampsToLocalDateTime(ticketFromDatabase.getTimestamp(5)));</span>
+		}
+<span class="fc" id="L128">		return ticket;</span>
+	}
+	
+    /**
+     * Used in Class : ParkingService by Method : isThereAlreadyThisVehicleInDB(String, ParkingType)
+     * @param STRING vehicleRegNumber
+     * @param ParkingType parkingType
+     * @return integer
+     */
+    public int getTicketIfVehiculeAlreadyInside(String vehicleRegNumber, ParkingType parkingType){
+<span class="fc" id="L138">        Connection con = null;</span>
+<span class="fc" id="L139">        int result =0;</span>
+        try {
+<span class="fc" id="L141">            con = dataBaseConfig.getConnection();</span>
+<span class="fc" id="L142">            PreparedStatement ps = con.prepareStatement(DBConstants.GET_NUMBER_OF_TICKETS_WHERE_VREG_TYPE);</span>
+            //After the Where in quarry replace the xth parametter or ?
+<span class="fc" id="L144">            ps.setString(1, vehicleRegNumber.toString());</span>
+<span class="fc" id="L145">            ps.setString(2, parkingType.toString());</span>
+<span class="fc" id="L146">            ResultSet ticketsFromDatabase = ps.executeQuery();</span>
+            // get only the first line of the result of the querry
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">            if(ticketsFromDatabase.next()){</span>
+<span class="fc" id="L149">                result = ticketsFromDatabase.getInt(1); </span>
+            }
+            //close execution of the querry wich is the 'array' returned by the querry
+<span class="fc" id="L152">            dataBaseConfig.closeResultSet(ticketsFromDatabase);</span>
+            //close the prepared statement or link to db
+<span class="fc" id="L154">            dataBaseConfig.closePreparedStatement(ps);</span>
+<span class="nc" id="L155">        }catch (Exception ex){</span>
+<span class="nc" id="L156">            logger.error(&quot;Error fetching number of available slot for &quot;+ parkingType.toString() +&quot; &quot;,ex);</span>
+        }finally {
+<span class="fc" id="L158">            dataBaseConfig.closeConnection(con);</span>
+        }
+<span class="fc" id="L160">        return result;</span>
+    }
+    
+
+    /**
+     * Used in Class : ParkingService by Method : updateOutTimeOfTicketForExitingVehicle(Ticket ticket, LocalDateTime outTime)
+     * @param Ticket
+     * @return boolean
+     */
+    public boolean updateOutTimeOfCurrentTicket(Ticket ticket) {
+<span class="fc" id="L170">        Connection updateTicketConnexion = null;</span>
+        try {
+<span class="fc" id="L172">            updateTicketConnexion = dataBaseConfig.getConnection();</span>
+<span class="fc" id="L173">            PreparedStatement querryUpdateTicket = updateTicketConnexion.prepareStatement(DBConstants.UPDATE_OUT_TIME_OF_TICKET);</span>
+<span class="fc" id="L174">            querryUpdateTicket.setTimestamp(1, DateHelperUtil.convertLocalDateTimeToTimestamp(ticket.getOutTime()));</span>
+<span class="fc" id="L175">            querryUpdateTicket.setInt(2, ticket.getId());</span>
+<span class="fc" id="L176">            querryUpdateTicket.execute();</span>
+<span class="fc" id="L177">            return true;</span>
+<span class="nc" id="L178">        }catch (Exception ex){</span>
+<span class="nc" id="L179">            logger.error(&quot;Error saving date of ticket.&quot;,ex);</span>
+        }finally {
+<span class="fc" id="L181">            dataBaseConfig.closeConnection(updateTicketConnexion);</span>
+        }
+<span class="nc" id="L183">        return false;</span>
+    }
+    /**
+     * Used in Class : ParkingService by Method : updatePriceOfCurrentTicket(Ticket, Double)
+     * @param Ticketticket
+     * @param DOUBLE price
+     * @return boolean
+     */
+    public boolean updatePriceOfCurrentTicket(Ticket ticket, Double price) {
+<span class="fc" id="L192">        Connection updateTicketConnexion = null;</span>
+        try {
+<span class="fc" id="L194">            updateTicketConnexion = dataBaseConfig.getConnection();</span>
+<span class="fc" id="L195">            PreparedStatement querryUpdateTicket = updateTicketConnexion.prepareStatement(DBConstants.UPDATE_PRICE_OF_TICKET);</span>
+<span class="fc" id="L196">            querryUpdateTicket.setDouble(1, price);</span>
+<span class="fc" id="L197">            querryUpdateTicket.setInt(2, ticket.getId());</span>
+<span class="fc" id="L198">            querryUpdateTicket.execute();</span>
+<span class="fc" id="L199">            return true;</span>
+<span class="nc" id="L200">        }catch (Exception ex){</span>
+<span class="nc" id="L201">            logger.error(&quot;Error saving price of ticket.&quot;,ex);</span>
+        }finally {
+<span class="fc" id="L203">            dataBaseConfig.closeConnection(updateTicketConnexion);</span>
+        }
+<span class="nc" id="L205">        return false;</span>
+    }
+    /**
+     * Used in Class : PayementService by Method : getTicketOfExitingVehicleAndSetOutTime(String)
+     * @param STRING vehicleRegNumber
+     * @return Ticket
+     */
+    public boolean isItALoyalCustomer(String vehicleRegNumber) {
+<span class="fc" id="L213">        Connection getTicketConnection = null;</span>
+        try {
+<span class="fc" id="L215">            getTicketConnection = dataBaseConfig.getConnection();</span>
+<span class="fc" id="L216">            PreparedStatement querryGetTicket = getTicketConnection.</span>
+<span class="fc" id="L217">            		prepareStatement(DBConstants.GET_TICKET_OF_LOYAL_CUSTOMER);</span>
+<span class="fc" id="L218">            querryGetTicket.setString(1, vehicleRegNumber);</span>
+<span class="fc" id="L219">            ResultSet ticketFromDatabase = querryGetTicket.executeQuery();</span>
+            //TEST doesn't pass after here
+<span class="fc" id="L221">            Ticket ticket = resultSetToTicket(vehicleRegNumber, ticketFromDatabase);</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">            if (ticket!=null) {</span>
+<span class="fc" id="L223">            	return true;</span>
+            }
+<span class="fc" id="L225">            dataBaseConfig.closeResultSet(ticketFromDatabase);</span>
+<span class="fc" id="L226">            dataBaseConfig.closePreparedStatement(querryGetTicket);</span>
+            
+<span class="nc" id="L228">        }catch (Exception ex){</span>
+<span class="nc" id="L229">            logger.error(&quot;Error fetching next available slot&quot;,ex);</span>
+        }finally {
+<span class="fc" id="L231">            dataBaseConfig.closeConnection(getTicketConnection);</span>
+           
+        }
+<span class="fc" id="L234">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

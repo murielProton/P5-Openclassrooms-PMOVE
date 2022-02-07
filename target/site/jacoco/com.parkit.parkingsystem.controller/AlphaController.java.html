@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AlphaController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">parking-system</a> &gt; <a href="index.source.html" class="el_package">com.parkit.parkingsystem.controller</a> &gt; <span class="el_source">AlphaController.java</span></div><h1>AlphaController.java</h1><pre class="source lang-java linenums">package com.parkit.parkingsystem.controller;
+
+import com.parkit.parkingsystem.dao.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.service.ParkingService;
+import com.parkit.parkingsystem.util.InputReaderUtil;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * @author Muriel Proton
+ *
+ */
+<span class="fc" id="L15">public class AlphaController {</span>
+
+<span class="fc" id="L17">    private boolean working = true;</span>
+<span class="fc" id="L18">    private static final Logger logger = LogManager.getLogger(&quot;AlphaController&quot;);</span>
+<span class="fc" id="L19">    private ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAO();</span>
+<span class="fc" id="L20">    private TicketDAO ticketDAO = new TicketDAO();</span>
+<span class="fc" id="L21">    private ParkingService parkingService = new ParkingService(parkingSpotDAO, ticketDAO);</span>
+<span class="fc" id="L22">    private IncomingVehicleController incomingVehicleController = new IncomingVehicleController(parkingService);</span>
+<span class="fc" id="L23">    private ExitingVehicleController exitingVehicleController = new ExitingVehicleController(parkingService);</span>
+    
+    
+
+    /**
+     * calls on next method run
+     * Used in Class IncomingVehicleController by Method : runSavingTicket(String, ParkingType)
+     * Used in Class App by Method : main(String)
+     * @param NONE
+     * @return VOID
+     */
+    public static void loadInterface(){
+<span class="fc" id="L35">        logger.info(&quot;App initialized!!!&quot;);</span>
+<span class="fc" id="L36">        System.out.println(&quot;Welcome to Parking System!&quot;);</span>
+<span class="fc" id="L37">        AlphaController myAlphaController= new AlphaController();</span>
+<span class="fc" id="L38">        myAlphaController.run();       </span>
+<span class="fc" id="L39">    }</span>
+    /**
+    * Used in Class AlphaController by Method : loadInterface
+    * @param NONE
+     * @return VOID
+    */
+    public void run(){
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        while(working){</span>
+<span class="fc" id="L47">            selectionAction();</span>
+        }
+<span class="fc" id="L49">    }</span>
+    /**
+    * Used in Class AlphaController by Method : run()
+    * @param NONE
+     * @return VOID
+    */
+    public void selectionAction(){
+        //Display
+<span class="fc" id="L57">        System.out.println(&quot;Please select an option. Simply enter the number to choose an action&quot;);</span>
+<span class="fc" id="L58">        System.out.println(&quot;1 New Vehicle Entering - Allocate Parking Space&quot;);</span>
+<span class="fc" id="L59">        System.out.println(&quot;2 Vehicle Exiting - Generate Ticket Price&quot;);</span>
+<span class="fc" id="L60">        System.out.println(&quot;3 Shutdown System&quot;);</span>
+        //Get input
+<span class="fc" id="L62">        int selectedAction = InputReaderUtil.readInt();</span>
+        //Treat input
+<span class="fc" id="L64">        processSelectAction(selectedAction);</span>
+<span class="fc" id="L65">    }</span>
+
+
+    /**
+     * Excute the right methode or CASE
+     * Returns True if App must continue 
+     * Used in Class AlphaController by Method : selectionAction()
+     * @param INTEGER action
+     * @return VOID
+     */
+    public void processSelectAction(int action){
+<span class="pc bpc" id="L76" title="1 of 4 branches missed.">        switch(action){</span>
+            case 1: {
+<span class="fc" id="L78">                incomingVehicleController.runSelectVehicleType();</span>
+<span class="fc" id="L79">                break;</span>
+            }
+            case 2: {
+<span class="fc" id="L82">            	exitingVehicleController.processExitingVehicle();</span>
+<span class="fc" id="L83">                break;</span>
+            }
+            case 3: {
+<span class="fc" id="L86">                System.out.println(&quot;Exiting from the system!&quot;);</span>
+<span class="fc" id="L87">                working = false;</span>
+<span class="fc" id="L88">                break;</span>
+            }
+<span class="nc" id="L90">            default: System.out.println(&quot;Unsupported option. Please enter a number corresponding to the provided menu&quot;);</span>
+        }
+<span class="fc" id="L92">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

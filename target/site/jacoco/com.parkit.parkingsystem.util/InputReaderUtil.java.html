@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InputReaderUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">parking-system</a> &gt; <a href="index.source.html" class="el_package">com.parkit.parkingsystem.util</a> &gt; <span class="el_source">InputReaderUtil.java</span></div><h1>InputReaderUtil.java</h1><pre class="source lang-java linenums">package com.parkit.parkingsystem.util;
+
+import java.util.Scanner;
+
+/**
+ * @author Muriel Proton
+ *
+ */
+<span class="nc" id="L9">public class InputReaderUtil {</span>
+
+<span class="fc" id="L11">	private static Scanner scan = new Scanner(System.in);</span>
+
+	/**
+	 * Used in Class RegistrationNumberController by Method : inputRegistrationNumber()
+	 * @param NONE
+	 * @return STRING
+	 */
+	public static String readNextLine() {
+		try {
+<span class="nc" id="L20">			return scan.nextLine();</span>
+<span class="nc" id="L21">		} catch (Exception e) {</span>
+<span class="nc" id="L22">			return null;</span>
+		}
+	}
+
+	/**
+	 * Used in Class AlphaController by Method : selectionAction()
+	 * Used in Class IncomingVehicleController by Method : selectVehicleType()
+	 * @param NONE
+	 * @return INTEGER
+	 */
+	public static int readInt() {
+		try {
+<span class="nc" id="L34">			return Integer.parseInt(scan.nextLine());</span>
+<span class="nc" id="L35">		} catch (Exception e) {</span>
+<span class="nc" id="L36">			return -1;</span>
+		}
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
