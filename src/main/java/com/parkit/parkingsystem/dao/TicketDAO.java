@@ -217,7 +217,6 @@ public class TicketDAO {
             		prepareStatement(DBConstants.GET_TICKET_OF_LOYAL_CUSTOMER);
             querryGetTicket.setString(1, vehicleRegNumber);
             ResultSet ticketFromDatabase = querryGetTicket.executeQuery();
-            //TEST doesn't pass after here
             Ticket ticket = resultSetToTicket(vehicleRegNumber, ticketFromDatabase);
             if (ticket!=null) {
             	return true;

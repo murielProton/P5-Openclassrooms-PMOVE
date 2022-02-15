@@ -1,5 +1,6 @@
 package com.parkit.parkingsystem.controller;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +20,9 @@ public class ExitingVehicleController {
 
 	private ParkingService parkingService;
 	private static final Logger logger = LogManager.getLogger("ExitingVehicleController");
+	
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+	private static final DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	/**
 	 * CONSTRUCTOR method
@@ -27,47 +31,6 @@ public class ExitingVehicleController {
 	 */
 	public ExitingVehicleController(ParkingService parkingService) {
 		this.parkingService = parkingService;
-	}
-
-	/*
-	 * gets the registration number of vehicle
-	 * Used in Class processExitingVehicle by Method : processExitingVehicle
-	 * @param NONE
-	 * @return STRING
-	 **/
-	public String getRegistrationNumber() {
-		try {
-			String vehicleRegNumber = RegistrationNumberController.inputRegistrationNumber();
-			return vehicleRegNumber;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * gets price of the ticket
-	 * Used in Class processExitingVehicle by Method : processExitingVehicle 
-	 * @param STRING vehicleRegNumber
-	 * @return Ticket
-	 */
-	public Ticket getTicketOfExitingVehicleAndSetOutTime(String vehiculRegNumber) {
-		try {
-			Ticket currentTicket = PayementService.getTicketOfExitingVehicleAndSetOutTime(vehiculRegNumber);
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-			DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			String timeOfDeparture = currentTicket.getOutTime().format(formatter);
-			String timeOfArrival = currentTicket.getInTime().format(formatter);
-			String dayOfArrival = currentTicket.getInTime().format(dayFormatter);
-			
-			System.out.println("ExitingVehicleController Recorded out-time for your vehicle, registration number "
-					+ currentTicket.getVehicleRegNumber() + ", is : " + timeOfDeparture+".");
-			System.out.println("You have entered our facilities on the : "+dayOfArrival+ ", at : "+ timeOfArrival+".");
-			return currentTicket;
-		} catch (Exception e) {
-			logger.error("Unable to process exiting vehicle and set out time.", e);
-			throw new RuntimeException("Unable to process ticket.", e);
-		}
 	}
 
 	/**
@@ -101,7 +64,6 @@ public class ExitingVehicleController {
 		if (payementSecured) {
 			return true;
 		} else {
-			System.out.println("return false");
 			return false;
 		}
 	}
@@ -132,18 +94,31 @@ public class ExitingVehicleController {
 	 * @return VOID
 	 */
 	public void processExitingVehicle() {
-		String vehiculRegNumber = getRegistrationNumber();
-		Ticket thisTicket = getTicketOfExitingVehicleAndSetOutTime(vehiculRegNumber);
-		Double priceForThisTicket = getExitingVehiculePriceFare(thisTicket);
+		String vehiculRegNumber = RegistrationNumberController.inputRegistrationNumber();
+		Ticket ticket = PayementService.getTicketOfExitingVehicle(vehiculRegNumber);
+		// Préparation de la date de sortie
+		LocalDateTime outTime = LocalDateTime.now();
+		ticket.setOutTime(outTime);
+		
+		String timeOfDeparture = ticket.getOutTime().format(formatter);
+		String timeOfArrival = ticket.getInTime().format(formatter);
+		String dayOfArrival = ticket.getInTime().format(dayFormatter);
+		
+		System.out.println("ExitingVehicleController Recorded out-time for your vehicle, registration number "
+				+ ticket.getVehicleRegNumber() + ", is : " + timeOfDeparture+".");
+		System.out.println("You have entered our facilities on the : "+dayOfArrival+ ", at : "+ timeOfArrival+".");
+		
+		Double priceForThisTicket = getExitingVehiculePriceFare(ticket);
 		boolean payementValidated = payementTerminal(priceForThisTicket);
-		ParkingSpot parkingSpotToVacate = thisTicket.getParkingSpot();
+		ParkingSpot parkingSpotToVacate = ticket.getParkingSpot();
 		if(payementValidated) {
-			ParkingService.updatePriceOfCurrentTicket(thisTicket, priceForThisTicket);
+			ParkingService.updatePriceOfCurrentTicket(ticket, priceForThisTicket);
 			System.out.println("Update of ticket is a success.");
-			openGateForExitingVehicle(payementValidated, thisTicket);
+			openGateForExitingVehicle(payementValidated, ticket);
 			//TODO Verify that the vehicle realy left the facilities
+	        ParkingService.updateOutTimeOfTicketForExitingVehicle(ticket, ticket.getOutTime());
 			parkingService.emptyParkingSpot(parkingSpotToVacate);
-			}
+		}
 		
 	}
 }

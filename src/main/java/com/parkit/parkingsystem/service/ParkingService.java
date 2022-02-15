@@ -12,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDateTime;
-//TODO SORT INTO 3 categories Ticket | ParkingSpot | Both
 
 /**
  * @author Muriel Proton
