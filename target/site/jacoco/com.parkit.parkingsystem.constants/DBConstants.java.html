@@ -22,7 +22,7 @@
     public static final String GET_TICKET = 
     		&quot;select t.PARKING_NUMBER, t.ID, t.PRICE, t.IN_TIME, t.OUT_TIME, p.TYPE from ticket t,parking p &quot;
     		+ &quot; where p.parking_number = t.parking_number &quot;
-    		+ &quot; and t.VEHICLE_REG_NUMBER=? order by t.IN_TIME  limit 1&quot;;
+    		+ &quot; and t.VEHICLE_REG_NUMBER=? order by t.IN_TIME desc  limit 1&quot;;
     public static final String GET_EXITING_VEHICUL_TICKET = 
     		&quot;select t.PARKING_NUMBER, t.ID, t.PRICE, t.IN_TIME, t.OUT_TIME, p.TYPE from ticket t,parking p &quot;
     		+ &quot; where p.parking_number = t.parking_number &quot;

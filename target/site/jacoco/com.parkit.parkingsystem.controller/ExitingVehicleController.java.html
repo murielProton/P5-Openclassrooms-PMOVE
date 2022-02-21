@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExitingVehicleController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">parking-system</a> &gt; <a href="index.source.html" class="el_package">com.parkit.parkingsystem.controller</a> &gt; <span class="el_source">ExitingVehicleController.java</span></div><h1>ExitingVehicleController.java</h1><pre class="source lang-java linenums">package com.parkit.parkingsystem.controller;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,57 +19,19 @@ import com.parkit.parkingsystem.service.PayementService;
 public class ExitingVehicleController {
 
 	private ParkingService parkingService;
-<span class="fc" id="L21">	private static final Logger logger = LogManager.getLogger(&quot;ExitingVehicleController&quot;);</span>
+<span class="fc" id="L22">	private static final Logger logger = LogManager.getLogger(&quot;ExitingVehicleController&quot;);</span>
+	
+<span class="fc" id="L24">	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;HH:mm&quot;);</span>
+<span class="fc" id="L25">	private static final DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
 
 	/**
 	 * CONSTRUCTOR method
      * Used in Class  AlphaController 
      * @param ParkingService
 	 */
-<span class="fc" id="L28">	public ExitingVehicleController(ParkingService parkingService) {</span>
-<span class="fc" id="L29">		this.parkingService = parkingService;</span>
-<span class="fc" id="L30">	}</span>
-
-	/*
-	 * gets the registration number of vehicle
-	 * Used in Class processExitingVehicle by Method : processExitingVehicle
-	 * @param NONE
-	 * @return STRING
-	 **/
-	public String getRegistrationNumber() {
-		try {
-<span class="fc" id="L40">			String vehicleRegNumber = RegistrationNumberController.inputRegistrationNumber();</span>
-<span class="fc" id="L41">			return vehicleRegNumber;</span>
-<span class="nc" id="L42">		} catch (Exception e) {</span>
-<span class="nc" id="L43">			e.printStackTrace();</span>
-<span class="nc" id="L44">			return null;</span>
-		}
-	}
-
-	/**
-	 * gets price of the ticket
-	 * Used in Class processExitingVehicle by Method : processExitingVehicle 
-	 * @param STRING vehicleRegNumber
-	 * @return Ticket
-	 */
-	public Ticket getTicketOfExitingVehicleAndSetOutTime(String vehiculRegNumber) {
-		try {
-<span class="fc" id="L56">			Ticket currentTicket = PayementService.getTicketOfExitingVehicleAndSetOutTime(vehiculRegNumber);</span>
-<span class="fc" id="L57">			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;HH:mm&quot;);</span>
-<span class="fc" id="L58">			DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
-<span class="fc" id="L59">			String timeOfDeparture = currentTicket.getOutTime().format(formatter);</span>
-<span class="fc" id="L60">			String timeOfArrival = currentTicket.getInTime().format(formatter);</span>
-<span class="fc" id="L61">			String dayOfArrival = currentTicket.getInTime().format(dayFormatter);</span>
-			
-<span class="fc" id="L63">			System.out.println(&quot;ExitingVehicleController Recorded out-time for your vehicle, registration number &quot;</span>
-<span class="fc" id="L64">					+ currentTicket.getVehicleRegNumber() + &quot;, is : &quot; + timeOfDeparture+&quot;.&quot;);</span>
-<span class="fc" id="L65">			System.out.println(&quot;You have entered our facilities on the : &quot;+dayOfArrival+ &quot;, at : &quot;+ timeOfArrival+&quot;.&quot;);</span>
-<span class="fc" id="L66">			return currentTicket;</span>
-<span class="nc" id="L67">		} catch (Exception e) {</span>
-<span class="nc" id="L68">			logger.error(&quot;Unable to process exiting vehicle and set out time.&quot;, e);</span>
-<span class="nc" id="L69">			throw new RuntimeException(&quot;Unable to process ticket.&quot;, e);</span>
-		}
-	}
+<span class="fc" id="L32">	public ExitingVehicleController(ParkingService parkingService) {</span>
+<span class="fc" id="L33">		this.parkingService = parkingService;</span>
+<span class="fc" id="L34">	}</span>
 
 	/**
 	 * gets price of the ticket
@@ -78,13 +41,13 @@ public class ExitingVehicleController {
 	 */
 	public Double getExitingVehiculePriceFare(Ticket ticket) {
 		try {
-<span class="fc" id="L81">			FareCalculatorService currentFare = new FareCalculatorService();</span>
-<span class="fc" id="L82">			Double currentPrice = currentFare.calculateFare(ticket);</span>
-<span class="fc" id="L83">			System.out.println(&quot;Your price fare is : &quot; + currentPrice);</span>
-<span class="fc" id="L84">			return currentPrice;</span>
-<span class="nc" id="L85">		} catch (Exception e) {</span>
-<span class="nc" id="L86">			logger.error(&quot;Unable to process price fare for exiting vehicle.&quot;, e);</span>
-<span class="nc" id="L87">			throw new RuntimeException(&quot;Unable to process ticket.&quot;, e);</span>
+<span class="fc" id="L44">			FareCalculatorService currentFare = new FareCalculatorService();</span>
+<span class="fc" id="L45">			Double currentPrice = currentFare.calculateFare(ticket);</span>
+<span class="fc" id="L46">			System.out.println(&quot;Your price fare is : &quot; + currentPrice);</span>
+<span class="fc" id="L47">			return currentPrice;</span>
+<span class="nc" id="L48">		} catch (Exception e) {</span>
+<span class="nc" id="L49">			logger.error(&quot;Unable to process price fare for exiting vehicle.&quot;, e);</span>
+<span class="nc" id="L50">			throw new RuntimeException(&quot;Unable to process ticket.&quot;, e);</span>
 		}
 	}
 
@@ -95,14 +58,13 @@ public class ExitingVehicleController {
 	 * @return BOOLEAN
 	 */
 	public boolean payementTerminal(Double currentPrice) {
-<span class="fc" id="L98">		System.out.println(&quot;Please insert your CB, and folow the instructions on screen.&quot;);</span>
+<span class="fc" id="L61">		System.out.println(&quot;Please insert your CB, and folow the instructions on screen.&quot;);</span>
 		// TODO Please insert Security of payement Here
-<span class="fc" id="L100">		boolean payementSecured = true;</span>
-<span class="pc bpc" id="L101" title="1 of 2 branches missed.">		if (payementSecured) {</span>
-<span class="fc" id="L102">			return true;</span>
+<span class="fc" id="L63">		boolean payementSecured = true;</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">		if (payementSecured) {</span>
+<span class="fc" id="L65">			return true;</span>
 		} else {
-<span class="nc" id="L104">			System.out.println(&quot;return false&quot;);</span>
-<span class="nc" id="L105">			return false;</span>
+<span class="nc" id="L67">			return false;</span>
 		}
 	}
 
@@ -113,17 +75,17 @@ public class ExitingVehicleController {
 	 * @return VOID
 	 */
 	public void openGateForExitingVehicle(boolean payementValidated, Ticket ticket) {
-<span class="pc bpc" id="L116" title="1 of 2 branches missed.">		if (payementValidated) {</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">		if (payementValidated) {</span>
 			try {
-<span class="fc" id="L118">				System.out.println(&quot;Please exite by the opening gate.&quot;);</span>
-<span class="nc" id="L119">			} catch (Exception e) {</span>
-<span class="nc" id="L120">				System.out.println(&quot;Unable to update ticket information. Error occurred&quot;);</span>
-<span class="pc" id="L121">			}</span>
+<span class="fc" id="L80">				System.out.println(&quot;Please exite by the opening gate.&quot;);</span>
+<span class="nc" id="L81">			} catch (Exception e) {</span>
+<span class="nc" id="L82">				System.out.println(&quot;Unable to update ticket information. Error occurred&quot;);</span>
+<span class="pc" id="L83">			}</span>
 
 		} else {
-<span class="nc" id="L124">			System.out.println(&quot;Please waite help is on its way.&quot;);</span>
+<span class="nc" id="L86">			System.out.println(&quot;Please waite help is on its way.&quot;);</span>
 		}
-<span class="fc" id="L126">	}</span>
+<span class="fc" id="L88">	}</span>
 
 	/**
 	 * runs all the methods of this class
@@ -132,19 +94,32 @@ public class ExitingVehicleController {
 	 * @return VOID
 	 */
 	public void processExitingVehicle() {
-<span class="fc" id="L135">		String vehiculRegNumber = getRegistrationNumber();</span>
-<span class="fc" id="L136">		Ticket thisTicket = getTicketOfExitingVehicleAndSetOutTime(vehiculRegNumber);</span>
-<span class="fc" id="L137">		Double priceForThisTicket = getExitingVehiculePriceFare(thisTicket);</span>
-<span class="fc" id="L138">		boolean payementValidated = payementTerminal(priceForThisTicket);</span>
-<span class="fc" id="L139">		ParkingSpot parkingSpotToVacate = thisTicket.getParkingSpot();</span>
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">		if(payementValidated) {</span>
-<span class="fc" id="L141">			ParkingService.updatePriceOfCurrentTicket(thisTicket, priceForThisTicket);</span>
-<span class="fc" id="L142">			System.out.println(&quot;Update of ticket is a success.&quot;);</span>
-<span class="fc" id="L143">			openGateForExitingVehicle(payementValidated, thisTicket);</span>
-			//TODO Verify that the vehicle realy left the facilities
-<span class="fc" id="L145">			parkingService.emptyParkingSpot(parkingSpotToVacate);</span>
-			}
+<span class="fc" id="L97">		String vehiculRegNumber = RegistrationNumberController.inputRegistrationNumber();</span>
+<span class="fc" id="L98">		Ticket ticket = PayementService.getTicketOfExitingVehicle(vehiculRegNumber);</span>
+		// Préparation de la date de sortie
+<span class="fc" id="L100">		LocalDateTime outTime = LocalDateTime.now();</span>
+<span class="fc" id="L101">		ticket.setOutTime(outTime);</span>
 		
-<span class="fc" id="L148">	}</span>
+<span class="fc" id="L103">		String timeOfDeparture = ticket.getOutTime().format(formatter);</span>
+<span class="fc" id="L104">		String timeOfArrival = ticket.getInTime().format(formatter);</span>
+<span class="fc" id="L105">		String dayOfArrival = ticket.getInTime().format(dayFormatter);</span>
+		
+<span class="fc" id="L107">		System.out.println(&quot;ExitingVehicleController Recorded out-time for your vehicle, registration number &quot;</span>
+<span class="fc" id="L108">				+ ticket.getVehicleRegNumber() + &quot;, is : &quot; + timeOfDeparture+&quot;.&quot;);</span>
+<span class="fc" id="L109">		System.out.println(&quot;You have entered our facilities on the : &quot;+dayOfArrival+ &quot;, at : &quot;+ timeOfArrival+&quot;.&quot;);</span>
+		
+<span class="fc" id="L111">		Double priceForThisTicket = getExitingVehiculePriceFare(ticket);</span>
+<span class="fc" id="L112">		boolean payementValidated = payementTerminal(priceForThisTicket);</span>
+<span class="fc" id="L113">		ParkingSpot parkingSpotToVacate = ticket.getParkingSpot();</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">		if(payementValidated) {</span>
+<span class="fc" id="L115">			ParkingService.updatePriceOfCurrentTicket(ticket, priceForThisTicket);</span>
+<span class="fc" id="L116">			System.out.println(&quot;Update of ticket is a success.&quot;);</span>
+<span class="fc" id="L117">			openGateForExitingVehicle(payementValidated, ticket);</span>
+			//TODO Verify that the vehicle realy left the facilities
+<span class="fc" id="L119">	        ParkingService.updateOutTimeOfTicketForExitingVehicle(ticket, ticket.getOutTime());</span>
+<span class="fc" id="L120">			parkingService.emptyParkingSpot(parkingSpotToVacate);</span>
+		}
+		
+<span class="fc" id="L123">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

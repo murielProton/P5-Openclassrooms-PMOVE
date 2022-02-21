@@ -217,21 +217,20 @@ import java.sql.SQLException;
 <span class="fc" id="L217">            		prepareStatement(DBConstants.GET_TICKET_OF_LOYAL_CUSTOMER);</span>
 <span class="fc" id="L218">            querryGetTicket.setString(1, vehicleRegNumber);</span>
 <span class="fc" id="L219">            ResultSet ticketFromDatabase = querryGetTicket.executeQuery();</span>
-            //TEST doesn't pass after here
-<span class="fc" id="L221">            Ticket ticket = resultSetToTicket(vehicleRegNumber, ticketFromDatabase);</span>
-<span class="fc bfc" id="L222" title="All 2 branches covered.">            if (ticket!=null) {</span>
-<span class="fc" id="L223">            	return true;</span>
+<span class="fc" id="L220">            Ticket ticket = resultSetToTicket(vehicleRegNumber, ticketFromDatabase);</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">            if (ticket!=null) {</span>
+<span class="fc" id="L222">            	return true;</span>
             }
-<span class="fc" id="L225">            dataBaseConfig.closeResultSet(ticketFromDatabase);</span>
-<span class="fc" id="L226">            dataBaseConfig.closePreparedStatement(querryGetTicket);</span>
+<span class="fc" id="L224">            dataBaseConfig.closeResultSet(ticketFromDatabase);</span>
+<span class="fc" id="L225">            dataBaseConfig.closePreparedStatement(querryGetTicket);</span>
             
-<span class="nc" id="L228">        }catch (Exception ex){</span>
-<span class="nc" id="L229">            logger.error(&quot;Error fetching next available slot&quot;,ex);</span>
+<span class="nc" id="L227">        }catch (Exception ex){</span>
+<span class="nc" id="L228">            logger.error(&quot;Error fetching next available slot&quot;,ex);</span>
         }finally {
-<span class="fc" id="L231">            dataBaseConfig.closeConnection(getTicketConnection);</span>
+<span class="fc" id="L230">            dataBaseConfig.closeConnection(getTicketConnection);</span>
            
         }
-<span class="fc" id="L234">        return false;</span>
+<span class="fc" id="L233">        return false;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

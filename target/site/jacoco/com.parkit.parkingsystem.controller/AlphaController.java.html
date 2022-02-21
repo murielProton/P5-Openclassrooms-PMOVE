@@ -43,10 +43,11 @@ import org.apache.logging.log4j.Logger;
      * @return VOID
     */
     public void run(){
-<span class="fc bfc" id="L46" title="All 2 branches covered.">        while(working){</span>
-<span class="fc" id="L47">            selectionAction();</span>
+<span class="fc" id="L46">    	working = true;</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        while(working){</span>
+<span class="fc" id="L48">        	selectionAction();</span>
         }
-<span class="fc" id="L49">    }</span>
+<span class="fc" id="L50">    }</span>
     /**
     * Used in Class AlphaController by Method : run()
     * @param NONE
@@ -54,15 +55,15 @@ import org.apache.logging.log4j.Logger;
     */
     public void selectionAction(){
         //Display
-<span class="fc" id="L57">        System.out.println(&quot;Please select an option. Simply enter the number to choose an action&quot;);</span>
-<span class="fc" id="L58">        System.out.println(&quot;1 New Vehicle Entering - Allocate Parking Space&quot;);</span>
-<span class="fc" id="L59">        System.out.println(&quot;2 Vehicle Exiting - Generate Ticket Price&quot;);</span>
-<span class="fc" id="L60">        System.out.println(&quot;3 Shutdown System&quot;);</span>
+<span class="fc" id="L58">        System.out.println(&quot;Please select an option. Simply enter the number to choose an action&quot;);</span>
+<span class="fc" id="L59">        System.out.println(&quot;1 New Vehicle Entering - Allocate Parking Space&quot;);</span>
+<span class="fc" id="L60">        System.out.println(&quot;2 Vehicle Exiting - Generate Ticket Price&quot;);</span>
+<span class="fc" id="L61">        System.out.println(&quot;3 Shutdown System&quot;);</span>
         //Get input
-<span class="fc" id="L62">        int selectedAction = InputReaderUtil.readInt();</span>
+<span class="fc" id="L63">        int selectedAction = InputReaderUtil.readInt();</span>
         //Treat input
-<span class="fc" id="L64">        processSelectAction(selectedAction);</span>
-<span class="fc" id="L65">    }</span>
+<span class="fc" id="L65">        processSelectAction(selectedAction);</span>
+<span class="fc" id="L66">    }</span>
 
 
     /**
@@ -73,22 +74,22 @@ import org.apache.logging.log4j.Logger;
      * @return VOID
      */
     public void processSelectAction(int action){
-<span class="pc bpc" id="L76" title="1 of 4 branches missed.">        switch(action){</span>
+<span class="pc bpc" id="L77" title="1 of 4 branches missed.">        switch(action){</span>
             case 1: {
-<span class="fc" id="L78">                incomingVehicleController.runSelectVehicleType();</span>
-<span class="fc" id="L79">                break;</span>
+<span class="fc" id="L79">                incomingVehicleController.runSelectVehicleType();</span>
+<span class="fc" id="L80">                break;</span>
             }
             case 2: {
-<span class="fc" id="L82">            	exitingVehicleController.processExitingVehicle();</span>
-<span class="fc" id="L83">                break;</span>
+<span class="fc" id="L83">            	exitingVehicleController.processExitingVehicle();</span>
+<span class="fc" id="L84">                break;</span>
             }
             case 3: {
-<span class="fc" id="L86">                System.out.println(&quot;Exiting from the system!&quot;);</span>
-<span class="fc" id="L87">                working = false;</span>
-<span class="fc" id="L88">                break;</span>
+<span class="fc" id="L87">                System.out.println(&quot;Exiting from the system!&quot;);</span>
+<span class="fc" id="L88">                working = false;</span>
+<span class="fc" id="L89">                break;</span>
             }
-<span class="nc" id="L90">            default: System.out.println(&quot;Unsupported option. Please enter a number corresponding to the provided menu&quot;);</span>
+<span class="nc" id="L91">            default: System.out.println(&quot;Unsupported option. Please enter a number corresponding to the provided menu&quot;);</span>
         }
-<span class="fc" id="L92">    }</span>
+<span class="fc" id="L93">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

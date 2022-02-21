@@ -16,12 +16,8 @@ import java.time.LocalDateTime;
      * @param vehiculRegNumber
      * @return Ticket
      */
-    public static Ticket getTicketOfExitingVehicleAndSetOutTime(String vehiculRegNumber){
-<span class="fc" id="L20">    	TicketDAO ticketDAO= new TicketDAO();</span>
-<span class="fc" id="L21">        Ticket ticketOfExitingVehicle = ticketDAO.getTicketOfExitingVehicul(vehiculRegNumber);</span>
-<span class="fc" id="L22">        LocalDateTime outTime = LocalDateTime.now();</span>
-<span class="fc" id="L23">        ParkingService.updateOutTimeOfTicketForExitingVehicle(ticketOfExitingVehicle, outTime);</span>
-<span class="fc" id="L24">        return ticketOfExitingVehicle;</span>
+    public static Ticket getTicketOfExitingVehicle(String vehiculRegNumber){
+<span class="fc" id="L20">        return new TicketDAO().getTicketOfExitingVehicul(vehiculRegNumber);</span>
     }
     
 }

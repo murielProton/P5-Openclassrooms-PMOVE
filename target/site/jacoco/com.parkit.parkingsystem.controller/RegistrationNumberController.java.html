@@ -7,24 +7,25 @@ import com.parkit.parkingsystem.util.InputReaderUtil;
  *
  */
 <span class="nc" id="L9">public class RegistrationNumberController {</span>
-	
-    /**
-     * Used in Class IncomingVehicleController by Method : runRegistrationNumberController(ParkingType)
-     * Used in Class ExitingVehicleController by Method : getRegistrationNumber()
-     * @param NONE
-     * @return STRING
-     * @throws Exception
-     */
-    public static String inputRegistrationNumber() throws Exception {
-<span class="fc" id="L19">        String registrationNumber = null;</span>
-        try{
-<span class="fc" id="L21">        System.out.println(&quot;Please type the vehicle registration number and press enter key.&quot;);</span>
-<span class="fc" id="L22">        registrationNumber = InputReaderUtil.readNextLine();</span>
-<span class="fc" id="L23">        return registrationNumber;</span>
-<span class="nc" id="L24">        }catch (Exception regNumberException){</span>
-<span class="nc" id="L25">            regNumberException.printStackTrace();</span>
-        }
-<span class="nc" id="L27">        return registrationNumber;</span>
-    }
+
+	/**
+	 * Used in Class IncomingVehicleController by Method :
+	 * runRegistrationNumberController(ParkingType) Used in Class
+	 * ExitingVehicleController by Method : getRegistrationNumber()
+	 * 
+	 * @param NONE
+	 * @return STRING
+	 */
+	public static String inputRegistrationNumber() {
+<span class="fc" id="L20">		String registrationNumber = null;</span>
+		try {
+<span class="fc" id="L22">			System.out.println(&quot;Please type the vehicle registration number and press enter key.&quot;);</span>
+<span class="fc" id="L23">			registrationNumber = InputReaderUtil.readNextLine();</span>
+<span class="fc" id="L24">			return registrationNumber;</span>
+<span class="nc" id="L25">		} catch (Exception regNumberException) {</span>
+<span class="nc" id="L26">			regNumberException.printStackTrace();</span>
+		}
+<span class="nc" id="L28">		return registrationNumber;</span>
+	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
