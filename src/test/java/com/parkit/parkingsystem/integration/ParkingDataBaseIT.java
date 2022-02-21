@@ -65,7 +65,7 @@ public class ParkingDataBaseIT {
 						.thenReturn(vehicleRegNumber);
 				IncomingVehicleController incomingVehicleController = new IncomingVehicleController(parkingService);
 				// When
-				incomingVehicleController.selectVehicleType();
+				incomingVehicleController.runSelectVehicleType();
 				// Then
 				Assert.assertTrue(parkingService.isThereAlreadyThisVehicleInDB(vehicleRegNumber, ParkingType.BIKE));
 			}
